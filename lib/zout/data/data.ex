@@ -115,12 +115,8 @@ defmodule Zout.Data do
       |> Repo.one()
 
     if !is_nil(existing) do
-      Ecto.Changeset.change(existing,
-        end:
-          DateTime.utc_now()
-          |> DateTime.truncate(:second)
-          |> Repo.update!()
-      )
+      Ecto.Changeset.change(existing, end: DateTime.utc_now() |> DateTime.truncate(:second))
+      |> Repo.update!()
     end
   end
 
@@ -137,6 +133,18 @@ defmodule Zout.Data do
         project_id: id,
         status: status
       })
+    else
+      if existing.status != status do
+        now = DateTime.utc_now() |> DateTime.truncate(:second)
+        Ecto.Changeset.change(existing, end: now)
+        |> Repo.update!()
+        Repo.insert!(%Downtime{
+          start: now,
+          end: nil,
+          project_id: id,
+          status: status
+        })
+      end
     end
   end
 
