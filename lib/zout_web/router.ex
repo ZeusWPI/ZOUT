@@ -10,6 +10,10 @@ defmodule ZoutWeb.Router do
     plug :put_secure_browser_headers
   end
 
+  pipeline :auth do
+    ZoutWeb.Auth.Pipeline
+  end
+
   pipeline :api do
     plug :accepts, ["json"]
   end
@@ -19,6 +23,12 @@ defmodule ZoutWeb.Router do
 
     get "/", PageController, :index
     get "/projects", ProjectController, :index
+  end
+
+  scope "/auth", ZoutWeb do
+    pipe_through [:browser, :auth]
+    get "/:provider/callback", AuthController, :callback
+    get "/:provider", AuthController, :request
   end
 
   # Other scopes may use custom stacks.

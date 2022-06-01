@@ -56,6 +56,19 @@ config :zout, Zout.Scheduler,
     ]
   ]
 
+config :ueberauth, Ueberauth,
+  providers: [
+    zeus: {ZoutWeb.Auth.UeberauthStrategy, [uid_field: :email]}
+  ]
+
+config :zout, ZoutWeb.Auth.Guardian,
+  issuer: "zout",
+  secret_key: "Secret key. You can use `mix guardian.gen.secret` to get one"
+
+config :ueberauth, ZoutWeb.Auth.OAuthStrategy,
+  client_id: "tomtest",
+  client_secret: "blargh"
+
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{config_env()}.exs"

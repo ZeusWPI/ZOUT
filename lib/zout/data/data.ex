@@ -147,7 +147,7 @@ defmodule Zout.Data do
   anything.
   """
   def check_all_projects do
-    projects = list_projects
+    projects = list_projects()
 
     Enum.each(projects, fn project ->
       check_module = Checker.checker(project.checker)

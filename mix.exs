@@ -20,7 +20,7 @@ defmodule Zout.MixProject do
   def application do
     [
       mod: {Zout.Application, []},
-      extra_applications: [:logger, :runtime_tools]
+      extra_applications: [:logger, :runtime_tools, :oauth2]
     ]
   end
 
@@ -51,7 +51,10 @@ defmodule Zout.MixProject do
       {:plug_cowboy, "~> 2.5"},
       {:ecto_autoslug_field, "~> 0.3"},
       {:finch, "~> 0.12"},
-      {:quantum, "~> 3.0"}
+      {:quantum, "~> 3.0"},
+      {:ueberauth, "~> 0.7"},
+      {:oauth2, "~> 2.0"},
+      {:guardian, "~> 2.0"}
     ]
   end
 
