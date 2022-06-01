@@ -136,8 +136,10 @@ defmodule Zout.Data do
     else
       if existing.status != status do
         now = DateTime.utc_now() |> DateTime.truncate(:second)
+
         Ecto.Changeset.change(existing, end: now)
         |> Repo.update!()
+
         Repo.insert!(%Downtime{
           start: now,
           end: nil,
