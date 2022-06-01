@@ -51,7 +51,7 @@ window.liveSocket = liveSocket;
 // progressbar.js@1.0.0 version is used
 // Docs: http://progressbarjs.readthedocs.org/en/1.0.0/
 
-window.loadStatusProgressBar = function(divId) {
+window.loadStatusProgressBar = function(divId, isDown) {
   console.log(`Loading bar for id ${divId}`);
   let bar = new ProgressBar.Circle(`#${divId}`, {
     color: "#aaa",
@@ -65,7 +65,7 @@ window.loadStatusProgressBar = function(divId) {
       autoStyleContainer: false,
     },
     from: { color: "#aaa", width: 1 },
-    to: { color: "#5cb571", width: 4 }, // #333
+    to: { color: isDown ? "#d65c3a" : "#5cb571", width: 4 }, // #333
 
     // Set default step function for all animate calls
     step: function (state, circle) {

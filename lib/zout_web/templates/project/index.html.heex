@@ -19,7 +19,7 @@
       </tr>
       <script>
         window.addEventListener("load",function(event) {
-          loadStatusProgressBar("loading-container-<%= project.id %>");
+          loadStatusProgressBar("loading-container-<%= project.id %>", <%= is_down(downtime) %>);
         });
       </script>
     <% end %>
