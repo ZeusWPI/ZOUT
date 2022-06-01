@@ -1,0 +1,20 @@
+<h1 class="title is-size-4">Alle projecten</h1>
+
+<table class="table--responsive">
+  <thead>
+  <tr>
+    <th>Project</th>
+    <th>Status</th>
+  </tr>
+  </thead>
+  <tbody>
+    <%= for %{ project: project, downtime: downtime } = p <- @projects do %>
+      <tr>
+        <td class="order-item-info"><%= project.name %></td>
+        <td>
+          <%= render_status(downtime) %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
