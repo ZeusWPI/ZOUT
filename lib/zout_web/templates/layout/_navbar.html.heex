@@ -33,7 +33,7 @@
               <%= user.nickname %>
             </a>
             <div class="navbar-dropdown is-boxed">
-              <%= link "Afmelden", to: Routes.auth_path(@conn, :logout), class: "navbar-item" %>
+              <%= link "Afmelden", to: Routes.auth_path(@conn, :logout), method: :post, class: "navbar-item" %>
             </div>
           </div>
         <% end %>

@@ -73,3 +73,13 @@ config :phoenix, :stacktrace_depth, 20
 
 # Initialize plugs at runtime for faster development compilation
 config :phoenix, :plug_init_mode, :runtime
+
+# Guardian token for cookies
+config :zout, ZoutWeb.Auth.Guardian,
+  issuer: "zout",
+  secret_key: "S75heLj8yJOXPohixmJdpLotLbVYVBMwYXXI5xxlD7VWklROQooxoaKVMqNeXpHr"
+
+# Use the test client in dev mode.
+config :ueberauth, ZoutWeb.Auth.OAuthStrategy,
+  client_id: "tomtest",
+  client_secret: "blargh"

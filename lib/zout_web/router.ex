@@ -11,7 +11,7 @@ defmodule ZoutWeb.Router do
   end
 
   pipeline :auth do
-    ZoutWeb.Auth.Pipeline
+    plug ZoutWeb.Auth.Pipeline
   end
 
   pipeline :api do
@@ -19,17 +19,16 @@ defmodule ZoutWeb.Router do
   end
 
   scope "/", ZoutWeb do
-    pipe_through :browser
+    pipe_through [:browser, :auth]
 
     get "/", PageController, :index
     get "/projects", ProjectController, :index
-  end
 
-  scope "/auth", ZoutWeb do
-    pipe_through [:browser, :auth]
-    get "/:provider/callback", AuthController, :callback
-    get "/:provider", AuthController, :request
-    delete "/logout", AuthController, :logout
+    scope "/auth" do
+      get "/:provider/callback", AuthController, :callback
+      get "/:provider", AuthController, :request
+      post "/logout", AuthController, :logout
+    end
   end
 
   # Other scopes may use custom stacks.

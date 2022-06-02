@@ -22,5 +22,8 @@ defmodule Zout.Accounts do
     |> Repo.insert_or_update!()
   end
 
-  def get_user(id), do: Repo.get(User, id: id)
+  @doc """
+  Get the user with the given ID.
+  """
+  def get_user(id), do: Repo.get(User, id)
 end
