@@ -4,16 +4,14 @@
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <meta name="csrf-token" content={csrf_token_value()}>
-    <%= live_title_tag assigns[:page_title] || "Zout", suffix: " · Phoenix Framework" %>
+    <%= live_title_tag assigns[:page_title] || "Zeus Overzicht met Uitgebreide Toestanden", suffix: " · ZOUT" %>
     <link phx-track-static rel="stylesheet" href={Routes.static_path(@conn, "/assets/app.css")}/>
     <script defer phx-track-static type="text/javascript" src={Routes.static_path(@conn, "/assets/app.js")}></script>
   </head>
   <body>
     <header>
       <section class="container">
-        <nav class="navbar">
-          TODO
-        </nav>
+        <%= render "_navbar.html", conn: @conn %>
       </section>
     </header>
     <%= @inner_content %>

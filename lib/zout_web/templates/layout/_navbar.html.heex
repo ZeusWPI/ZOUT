@@ -1,0 +1,43 @@
+<nav class="navbar is-transparent">
+  <div class="container">
+    <!-- Brand -->
+    <div class="navbar-brand">
+      <a class="navbar-title" href="/">ZOUT</a>
+
+      <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+      </a>
+    </div>
+
+    <!-- Menu -->
+    <div class="navbar-menu">
+
+      <div class="navbar-start">
+        <span class="navbar-item">
+          <small>Het Zeus Overzicht met Uitgebreide Toestanden</small>
+         </span>
+      </div>
+
+      <div class="navbar-end">
+        <%= link "Overzicht", to: Routes.project_path(@conn, :index), class: "navbar-item" %>
+
+        <!-- User -->
+        <% user = Guardian.Plug.current_resource(@conn) %>
+        <%= if is_nil(user) do %>
+          <%= link "Aanmelden met Zeus", to: Routes.auth_path(@conn, :request, :zeus), class: "navbar-item" %>
+        <% else %>
+          <div class="navbar-item has-dropdown is-hoverable">
+            <a class="navbar-link">
+              <%= user.nickname %>
+            </a>
+            <div class="navbar-dropdown is-boxed">
+              <%= link "Afmelden", to: Routes.auth_path(@conn, :logout), class: "navbar-item" %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</nav>
