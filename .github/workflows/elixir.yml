@@ -19,6 +19,7 @@ jobs:
       postgres:
         image: postgres
         env:
+          POSTGRES_HOST: postgres
           POSTGRES_DB: zout_test
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
