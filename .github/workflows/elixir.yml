@@ -43,6 +43,8 @@ jobs:
         run: mix deps.get
       - name: Run tests
         run: mix test
+        env:
+          DATABASE_URL: postgresql://postgres@postgres/zout_test
   format:
     name: Format
     runs-on: ubuntu-latest
