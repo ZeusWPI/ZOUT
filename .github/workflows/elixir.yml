@@ -19,6 +19,8 @@ jobs:
       postgres:
         image: postgres
         env:
+          POSTGRES_DB: zout_test
+          POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
         options: >-
           --health-cmd pg_isready
@@ -45,6 +47,7 @@ jobs:
         run: mix test
         env:
           DATABASE_URL: postgresql://postgres@postgres/zout_test
+          MIX_ENV: test
   format:
     name: Format
     runs-on: ubuntu-latest
