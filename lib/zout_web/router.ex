@@ -29,6 +29,7 @@ defmodule ZoutWeb.Router do
     pipe_through [:browser, :auth]
     get "/:provider/callback", AuthController, :callback
     get "/:provider", AuthController, :request
+    delete "/logout", AuthController, :logout
   end
 
   # Other scopes may use custom stacks.

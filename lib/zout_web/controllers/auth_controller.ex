@@ -42,4 +42,10 @@ defmodule ZoutWeb.AuthController do
     |> delete_session(:after_login_redirect)
     |> redirect(to: redirect_url)
   end
+
+  def logout(conn, _) do
+    conn
+    |> Guardian.sign_out()
+    |> redirect(to: Routes.project_path(conn, :index))
+  end
 end
