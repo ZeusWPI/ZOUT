@@ -1,0 +1,10 @@
+<h1 class="title"><%= @project.name %></h1>
+<div class="subtitle">
+  TODO
+  Hier komen ooit dingen zoals de beschrijving
+</div>
+<div class="card">
+  <div class="card-content">
+    Iets van content?
+  </div>
+</div>

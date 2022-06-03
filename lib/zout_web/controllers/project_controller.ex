@@ -64,4 +64,12 @@ defmodule ZoutWeb.ProjectController do
         |> render("edit.html", changeset: changeset)
     end
   end
+
+  def show(conn, %{"id" => id}) do
+    user = Guardian.Plug.current_resource(conn)
+    project = Data.get_project!(id)
+    Bodyguard.permit!(Data.Policy, :project_show, user, project)
+
+    render(conn, :show, project: project)
+  end
 end

@@ -10,7 +10,7 @@
   <tbody>
     <%= for %{ project: project, downtime: downtime } = p <- @projects do %>
       <tr>
-        <td class="order-item-info"><%= project.name %></td>
+        <td class="order-item-info"><%= link project.name, to: Routes.project_path(@conn, :show, project) %></td>
         <td>
           <%= render_status(downtime) %>
         </td>
