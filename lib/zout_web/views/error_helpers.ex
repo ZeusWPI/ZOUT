@@ -10,11 +10,23 @@ defmodule ZoutWeb.ErrorHelpers do
   """
   def error_tag(form, field) do
     Enum.map(Keyword.get_values(form.errors, field), fn error ->
-      content_tag(:span, translate_error(error),
-        class: "invalid-feedback",
+      content_tag(:p, translate_error(error),
+        class: "help is-danger",
         phx_feedback_for: input_name(form, field)
       )
     end)
+  end
+
+  @doc """
+  Return the "is-danger" string if an error exists, in addition to other classes.
+  """
+  def input_class(form, field, classes \\ "input") do
+    Enum.map(Keyword.get_values(form.errors, field), fn error ->
+      "is-danger"
+    end)
+    |> Enum.uniq()
+    |> Enum.concat([classes])
+    |> Enum.join(" ")
   end
 
   @doc """

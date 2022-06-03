@@ -49,7 +49,8 @@ defmodule Zout.Data do
 
   """
   def create_project(attrs \\ %{}) do
-    raise "TODO"
+    change_project(%Project{}, attrs)
+    |> Repo.insert()
   end
 
   @doc """
@@ -93,8 +94,8 @@ defmodule Zout.Data do
       %Todo{...}
 
   """
-  def change_project(%Project{} = project, _attrs \\ %{}) do
-    raise "TODO"
+  def change_project(%Project{} = project, attrs \\ %{}) do
+    Project.changeset(project, attrs)
   end
 
   def list_projects_and_status do
