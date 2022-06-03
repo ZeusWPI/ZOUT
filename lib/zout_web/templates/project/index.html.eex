@@ -1,26 +1,41 @@
-<h1 class="title is-size-4">Alle projecten</h1>
-
-<table class="table--responsive">
-  <thead>
-  <tr>
-    <th>Project</th>
-    <th>Status</th>
-    <th>Acties</th>
-  </tr>
-  </thead>
-  <tbody>
-    <%= for %{ project: project, downtime: downtime } <- @projects do %>
+<h1 class="title">
+  Alle projecten
+</h1>
+<div class="subtitle">
+  Wat is er nu kapot?
+</div>
+<div class="card">
+  <div class="card-content">
+    <table class="table--responsive">
+      <thead>
       <tr>
-        <td class="order-item-info"><%= link project.name, to: Routes.project_path(@conn, :show, project) %></td>
-        <td>
-          <%= render_status(downtime) %>
-        </td>
-        <td>
-          <%= if can?(@conn, :project_edit, project) do %>
-            <%= link "Bewerken", to: Routes.project_path(@conn, :edit, project) %>
-          <% end %>
-        </td>
+        <th>Project</th>
+        <th>Status</th>
+        <th>Acties</th>
       </tr>
-    <% end %>
-  </tbody>
-</table>
+      </thead>
+      <tbody>
+        <%= for %{ project: project, downtime: downtime } <- @projects do %>
+          <tr>
+            <td class="order-item-info"><%= link project.name, to: Routes.project_path(@conn, :show, project) %></td>
+            <td>
+              <%= render_status(downtime) %>
+            </td>
+            <td>
+              <%= if can?(@conn, :project_edit, project) do %>
+                <%= link "Bewerken", to: Routes.project_path(@conn, :edit, project) %>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+    <div class="mt-3">
+      <div class="is-flex is-justify-content-flex-end">
+        <%= if can?(@conn, :project_new) do %>
+        <%= link "Nieuw project", to: Routes.project_path(@conn, :new), class: "button is-primary" %>
+      <% end %>
+      </div>
+    </div>
+  </div>
+</div>

@@ -65,4 +65,22 @@ defmodule ZoutWeb.ProjectView do
     user = Guardian.Plug.current_resource(conn)
     Bodyguard.permit?(Zout.Data.Policy, action, user, params)
   end
+
+  def title("index.html", _assigns) do
+    "Alle projecten"
+  end
+
+  def title("show.html", %{project: project}) do
+    project.name
+  end
+
+  def title("new.html", _assigns) do
+    "Nieuw project"
+  end
+
+  def title("edit.html", %{changeset: changeset}) do
+    "#{changeset.data.name} bewerken"
+  end
+
+  def title(_, _), do: ""
 end
