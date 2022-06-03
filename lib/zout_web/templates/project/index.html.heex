@@ -5,6 +5,7 @@
   <tr>
     <th>Project</th>
     <th>Status</th>
+    <th>Uptime</th>
   </tr>
   </thead>
   <tbody>
@@ -14,7 +15,13 @@
         <td>
           <%= render_status(downtime) %>
         </td>
+        <td><div class="loading-container" id={"loading-container-#{ project.id }"}></div></td>
       </tr>
+      <script>
+        window.addEventListener("load",function(event) {
+          loadStatusProgressBar("loading-container-<%= project.id %>", <%= is_down(downtime) %>);
+        });
+      </script>
     <% end %>
   </tbody>
 </table>

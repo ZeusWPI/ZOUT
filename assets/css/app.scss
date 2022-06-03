@@ -118,3 +118,10 @@
   0% { opacity: 1; }
   100% { opacity: 0; }
 }
+
+.loading-container {
+  margin: 20px;
+  width: 100px;
+  height: 100px;
+  position: relative;
+}
