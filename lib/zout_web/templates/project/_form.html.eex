@@ -66,6 +66,9 @@
       <div class="field">
         <div class="control">
           <div class="is-flex is-justify-content-flex-end">
+            <%= if can?(@conn, :project_delete, @changeset.data) and !is_nil(@changeset.data.id) do %>
+              <%= button "Verwijderen", to: Routes.project_path(@conn, :delete, @changeset.data), class: "button is-danger" %>
+            <% end %>
             <%= submit @submit, class: "button is-primary" %>
           </div>
         </div>

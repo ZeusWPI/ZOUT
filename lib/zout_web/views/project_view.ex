@@ -3,12 +3,27 @@ defmodule ZoutWeb.ProjectView do
 
   alias Zout.Data.Downtime
   alias Zout.Checker
+  alias ZoutWeb.FormatHelpers
 
-  def render_status(nil), do: "working"
-  def render_status(%Downtime{status: :working}), do: "working"
+  def number_of_days(since) do
+    now = DateTime.utc_now()
 
-  def render_status(%Downtime{status: status, start: start}),
-    do: "#{status} since #{DateTime.to_iso8601(start)}"
+    Timex.Interval.new(from: since, until: now)
+    |> Timex.Interval.duration(:days)
+  end
+
+  def render_status(nil), do: "🟢 working"
+  def render_status(%Downtime{status: :working}), do: "🟢 working"
+
+  def render_status(%Downtime{status: :failing, start: start}) do
+    days = number_of_days(start)
+    "🟠 failing sinds #{FormatHelpers.human_datetime(start)} (#{days} dagen)"
+  end
+
+  def render_status(%Downtime{status: :offline, start: start}) do
+    days = number_of_days(start)
+    "🔴 offline sinds #{FormatHelpers.human_datetime(start)} (#{days} dagen)"
+  end
 
   def render_help_for(checker) do
     module = Checker.checker(checker)
@@ -22,9 +37,8 @@ defmodule ZoutWeb.ProjectView do
   def from_map(changeset_struct, field) do
     actual_field = Atom.to_string(field) |> String.trim_leading("params_")
 
-    changeset_struct.data
-    |> Map.get(:params, %{})
-    |> Map.get(actual_field)
+    params = Map.get(changeset_struct.data, :params, %{}) || %{}
+    Map.get(params, actual_field)
   end
 
   defp json_status(nil), do: "working"
@@ -45,5 +59,10 @@ defmodule ZoutWeb.ProjectView do
         end),
       lastCheck: "TODO"
     }
+  end
+
+  def can?(conn, action, params \\ nil) do
+    user = Guardian.Plug.current_resource(conn)
+    Bodyguard.permit?(Zout.Data.Policy, action, user, params)
   end
 end

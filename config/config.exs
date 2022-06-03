@@ -61,6 +61,10 @@ config :ueberauth, Ueberauth,
     zeus: {ZoutWeb.Auth.UeberauthStrategy, [uid_field: :email]}
   ]
 
+config :ex_cldr,
+  default_locale: "nl",
+  default_backend: ZoutWeb.Cldr
+
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{config_env()}.exs"

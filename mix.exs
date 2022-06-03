@@ -56,7 +56,10 @@ defmodule Zout.MixProject do
       {:oauth2, "~> 2.0"},
       {:guardian, "~> 2.0"},
       {:earmark, "~> 1.4"},
-      {:bodyguard, "~> 2.4"}
+      {:bodyguard, "~> 2.4"},
+      {:ex_cldr, "~> 2.29"},
+      {:ex_cldr_dates_times, "~> 2.0"},
+      {:timex, "~> 3.0"}
     ]
   end
 

@@ -5,14 +5,20 @@
   <tr>
     <th>Project</th>
     <th>Status</th>
+    <th>Acties</th>
   </tr>
   </thead>
   <tbody>
-    <%= for %{ project: project, downtime: downtime } = p <- @projects do %>
+    <%= for %{ project: project, downtime: downtime } <- @projects do %>
       <tr>
         <td class="order-item-info"><%= link project.name, to: Routes.project_path(@conn, :show, project) %></td>
         <td>
           <%= render_status(downtime) %>
+        </td>
+        <td>
+          <%= if can?(@conn, :project_edit, project) do %>
+            <%= link "Bewerken", to: Routes.project_path(@conn, :edit, project) %>
+          <% end %>
         </td>
       </tr>
     <% end %>

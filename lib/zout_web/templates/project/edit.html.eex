@@ -1,4 +1,6 @@
-<h1 class="title"><%= @changeset.data.name %> bewerken</h1>
+<h1 class="title">
+  <%= @changeset.data.name %> bewerken
+</h1>
 <div class="subtitle">
   Bewerk het project
 </div>
