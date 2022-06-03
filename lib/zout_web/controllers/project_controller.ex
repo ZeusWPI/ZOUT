@@ -12,7 +12,7 @@ defmodule ZoutWeb.ProjectController do
     Bodyguard.permit!(Data.Policy, :project_index, user)
 
     projects = Data.list_projects_and_status()
-    render(conn, "index.html", projects: projects)
+    render(conn, :index, projects: projects)
   end
 
   def new(conn, _params) do

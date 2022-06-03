@@ -15,14 +15,22 @@ defmodule ZoutWeb.Router do
   end
 
   pipeline :api do
-    plug :accepts, ["json"]
+    plug :accepts, ["html", "json"]
   end
 
+  # Pages for which JSON is available
+  scope "/", ZoutWeb do
+    pipe_through [:browser, :auth, :api]
+
+    get "/projects", ProjectController, :index
+  end
+
+  # Non-JSON pages.
   scope "/", ZoutWeb do
     pipe_through [:browser, :auth]
 
     get "/", PageController, :index
-    resources "/projects", ProjectController, only: [:index, :new, :create, :edit, :update]
+    resources "/projects", ProjectController, except: [:index]
 
     scope "/auth" do
       get "/:provider/callback", AuthController, :callback

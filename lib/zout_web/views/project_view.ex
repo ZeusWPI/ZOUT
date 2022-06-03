@@ -26,4 +26,24 @@ defmodule ZoutWeb.ProjectView do
     |> Map.get(:params, %{})
     |> Map.get(actual_field)
   end
+
+  defp json_status(nil), do: "working"
+  defp json_status(%Downtime{status: status}), do: status
+
+  def render("index.json", %{projects: projects}) do
+    %{
+      projects:
+        Enum.map(projects, fn %{project: p, downtime: d} ->
+          %{
+            id: p.id,
+            name: p.name,
+            source: p.source,
+            home: p.home,
+            status: json_status(d),
+            since: "TODO"
+          }
+        end),
+      lastCheck: "TODO"
+    }
+  end
 end
