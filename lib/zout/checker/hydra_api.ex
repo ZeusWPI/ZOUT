@@ -1,8 +1,6 @@
 defmodule Zout.Checker.HydraApi do
   @moduledoc """
   Checks the Hydra (resto) API. Nobody else should use it.
-
-  This check requires one param: the `url` to which the request will be sent.
   """
   import Ecto.Changeset
 
