@@ -10,7 +10,7 @@ defmodule Zout.Data.Project do
     field :slug, EctoFields.Slug
     field :source, EctoFields.URL
     field :home, EctoFields.URL
-    field :checker, Ecto.Enum, values: [:http_ok]
+    field :checker, Ecto.Enum, values: [:http_ok, :hydra_api]
     field :params, :map
     field :deleted, :boolean
 

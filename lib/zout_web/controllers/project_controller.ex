@@ -30,7 +30,6 @@ defmodule ZoutWeb.ProjectController do
     case Data.create_project(params) do
       {:ok, _project} ->
         conn
-        |> put_status(:created)
         |> redirect(to: Routes.project_path(conn, :index))
 
       {:error, changeset} ->
