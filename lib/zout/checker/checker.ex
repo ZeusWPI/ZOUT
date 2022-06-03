@@ -7,6 +7,7 @@ defmodule Zout.Checker do
   Get the checker instance for a type.
   """
   def checker(:http_ok), do: Zout.Checker.HttpOk
+  def checker(:hydra_api), do: Zout.Checker.HydraApi
 
   @doc """
   Get the identifier for this checker.
@@ -34,5 +35,5 @@ defmodule Zout.Checker do
   They must put all required params in the `:params` structure. You must put
   something in the params structure, even if it the empty map.
   """
-  @callback changeset(changeset: Ecto.Changeset.t(), attrs: map) :: Ecto.Changeset.t()
+  @callback changeset(Ecto.Changeset.t(), map()) :: Ecto.Changeset.t()
 end
