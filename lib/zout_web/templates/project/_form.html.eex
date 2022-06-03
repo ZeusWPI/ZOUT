@@ -1,0 +1,98 @@
+<%= form_for @changeset, @path, fn f -> %>
+  <div>
+    <div class="columns is-multiline is-justify-content-space-between">
+      <div class="column is-narrow">
+        <h2 class="subtitle">Algemeen</h2>
+      </div>
+    </div>
+    <div class="field">
+      <%= label(f, :name, "Naam*", class: "label") %>
+      <div class="control">
+        <%= text_input(f, :name, required: true, class: input_class(f, :name)) %>
+      </div>
+      <%= error_tag(f, :name) %>
+    </div>
+    <div class="field">
+      <%= label(f, :source, "Repository", class: "label") %>
+      <div class="control">
+        <%= url_input(f, :source, class: input_class(f, :source)) %>
+      </div>
+      <%= error_tag(f, :source) %>
+    </div>
+    <div class="field">
+      <%= label(f, :home, "Webpagina", class: "label") %>
+      <div class="control">
+        <%= url_input(f, :home, class: input_class(f, :home)) %>
+      </div>
+      <%= error_tag(f, :home) %>
+    </div>
+  </div>
+  <hr>
+  <div>
+    <div class="columns is-multiline is-justify-content-space-between">
+      <div class="column is-narrow">
+        <h2 class="subtitle">Toestandscontrolemechanisme</h2>
+      </div>
+    </div>
+    <div class="field">
+      <%= label(f, :home, "Webpagina", class: "label") %>
+      <div class="control">
+        <div class="<%= input_class(f, :checker, "select") %>">
+          <%= select(f, :checker, [:http_ok], prompt: "Kies", required: true) %>
+        </div>
+      </div>
+      <p class="help">Kies hoe de toestand gecontroleerd moet worden.</p>
+      <%= error_tag(f, :checker) %>
+    </div>
+
+    <div class="field">
+      <h3 class="label" id="checker-help" style="display: none">Uitleg</h3>
+      <div class="checker-help" data-for-checker="http_ok" style="display: none">
+        <%= raw render_help_for(:http_ok) %>
+      </div>
+    </div>
+
+    <div class="checker-field" data-for-checker="http_ok" style="display: none">
+      <div class="field">
+        <%= label(f, :params_url, "Webpagina", class: "label") %>
+        <div class="control">
+          <%= url_input(f, :params_url, value: from_map(f, :params_url), class: input_class(f, :params)) %>
+        </div>
+        <%= error_tag(f, :params) %>
+      </div>
+    </div>
+
+    <div class="mt-3">
+      <div class="field">
+        <div class="control">
+          <div class="is-flex is-justify-content-flex-end">
+            <%= submit @submit, class: "button is-primary" %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>
+<script type="application/javascript">
+  function syncChecker() {
+    const select = document.getElementById("project_checker");
+    document.querySelectorAll(".checker-help").forEach(e => {
+      const forChecker = e.dataset.forChecker;
+      e.style.display = (forChecker === select.value ? "initial" : "none");
+    });
+    document.querySelectorAll(".checker-field").forEach(e => {
+      const forChecker = e.dataset.forChecker;
+      e.style.display = (forChecker === select.value ? "initial" : "none");
+    });
+    document.getElementById("checker-help").style.display = select.value ? "initial" : "none";
+    console.log(select.value);
+  }
+
+  // Listen to changes.
+  document.getElementById("project_checker").addEventListener("change", () => {
+    syncChecker();
+  });
+
+  // Do initial sync.
+  syncChecker();
+</script>

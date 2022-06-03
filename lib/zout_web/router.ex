@@ -22,7 +22,7 @@ defmodule ZoutWeb.Router do
     pipe_through [:browser, :auth]
 
     get "/", PageController, :index
-    resources "/projects", ProjectController, only: [:index, :new, :create]
+    resources "/projects", ProjectController, only: [:index, :new, :create, :edit, :update]
 
     scope "/auth" do
       get "/:provider/callback", AuthController, :callback

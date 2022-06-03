@@ -34,7 +34,7 @@ defmodule Zout.Data do
       %Project{}
 
   """
-  def get_project!(id), do: raise("TODO")
+  def get_project!(id), do: Repo.get!(Project, id)
 
   @doc """
   Creates a project.
@@ -66,7 +66,8 @@ defmodule Zout.Data do
 
   """
   def update_project(%Project{} = project, attrs) do
-    raise "TODO"
+    change_project(project, attrs)
+    |> Repo.update()
   end
 
   @doc """

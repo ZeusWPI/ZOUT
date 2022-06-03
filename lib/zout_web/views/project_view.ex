@@ -23,7 +23,7 @@ defmodule ZoutWeb.ProjectView do
     actual_field = Atom.to_string(field) |> String.trim_leading("params_")
 
     changeset_struct.data
-    |> Map.get("params", %{})
+    |> Map.get(:params, %{})
     |> Map.get(actual_field)
   end
 end
