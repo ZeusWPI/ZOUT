@@ -55,7 +55,8 @@ defmodule Zout.MixProject do
       {:ueberauth, "~> 0.7"},
       {:oauth2, "~> 2.0"},
       {:guardian, "~> 2.0"},
-      {:earmark, "~> 1.4"}
+      {:earmark, "~> 1.4"},
+      {:bodyguard, "~> 2.4"}
     ]
   end
 
