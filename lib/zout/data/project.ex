@@ -5,29 +5,35 @@ defmodule Zout.Data.Project do
   use Ecto.Schema
   import Ecto.Changeset
 
-  defmodule Slug do
-    use EctoAutoslugField.Slug, from: :name, to: :slug
-  end
-
   schema "projects" do
     field :name, :string
-    field :slug
-    Zout.Project.Slug
-    field :source, :string
-    field :home, :string
+    field :slug, EctoFields.Slug
+    field :source, EctoFields.URL
+    field :home, EctoFields.URL
     field :checker, Ecto.Enum, values: [:http_ok]
     field :params, :map
+    field :deleted, :boolean
 
     timestamps()
   end
 
-  @doc false
-  def changeset(project, attrs) do
+  defp handle_checker(changeset, attrs) do
+    case fetch_change(changeset, :checker) do
+      {:ok, data} -> Zout.Checker.checker(data).changeset(changeset, attrs)
+      _ -> changeset
+    end
+  end
+
+  def changeset(project, attrs \\ %{}) do
+    # Hehehe this is not clean :\
+    attrs = Map.put(attrs, "slug", Map.get(attrs, "name"))
+
     project
-    |> cast(attrs, [:name, :source, :home, :check_type])
-    |> validate_required([:name])
+    |> cast(attrs, [:name, :source, :home, :checker, :slug])
+    |> validate_required([:name, :checker])
     |> unique_constraint(:name)
-    |> Slug.maybe_generate_slug()
-    |> Slug.unique_constraint()
+    |> unique_constraint(:slug)
+    |> handle_checker(attrs)
+    |> validate_required([:params])
   end
 end

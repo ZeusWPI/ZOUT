@@ -1,0 +1,9 @@
+<h1 class="title">Nieuw project</h1>
+<div class="subtitle">
+  Voeg een nieuw project toe
+</div>
+<div class="card">
+  <div class="card-content">
+    <%= render "_form.html", conn: @conn, path: Routes.project_path(@conn, :create), changeset: @changeset, submit: "Toevoegen" %>
+  </div>
+</div>

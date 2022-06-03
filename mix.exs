@@ -49,12 +49,17 @@ defmodule Zout.MixProject do
       {:gettext, "~> 0.18"},
       {:jason, "~> 1.2"},
       {:plug_cowboy, "~> 2.5"},
-      {:ecto_autoslug_field, "~> 0.3"},
+      {:ecto_fields, "~> 1.3.0"},
       {:finch, "~> 0.12"},
       {:quantum, "~> 3.0"},
       {:ueberauth, "~> 0.7"},
       {:oauth2, "~> 2.0"},
-      {:guardian, "~> 2.0"}
+      {:guardian, "~> 2.0"},
+      {:earmark, "~> 1.4"},
+      {:bodyguard, "~> 2.4"},
+      {:ex_cldr, "~> 2.29"},
+      {:ex_cldr_dates_times, "~> 2.0"},
+      {:timex, "~> 3.0"}
     ]
   end
 

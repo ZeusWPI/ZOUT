@@ -26,4 +26,13 @@ defmodule Zout.Checker do
   will be displayed to users.
   """
   @callback check(map()) :: :working | {:failing, String.t() | nil} | {:offline, String.t() | nil}
+
+  @doc """
+  Extract the necessary params from the changeset.
+
+  Implementations receive the changeset of a `Project` and the form params.
+  They must put all required params in the `:params` structure. You must put
+  something in the params structure, even if it the empty map.
+  """
+  @callback changeset(changeset: Ecto.Changeset.t(), attrs: map) :: Ecto.Changeset.t()
 end

@@ -1,12 +1,26 @@
 defmodule Zout.Checker.HttpOk do
   @moduledoc """
-  Health check where the health is checked by sending an HTTP GET request,
-  for which the check expects an 200 OK result.
+  Perform a HTTP GET request and expect a 200 response.
 
-  This check does not support the "failing" status.
+  This is a very simple health checker, which uses HTTP statuses. If the service
+  is running, a 200 result is expected. The actual content of the page does not
+  matter. To be as useful as possible, the following status codes are accepted
+  as working: 200, 202, 203, 204 and 206.
 
-  The check expects an URL as param, which will be queried.
+  This is the easiest checker to use, as most sites have at least one normal
+  endpoint which returns 200 (e.g. the start page). Because it is so simple, it
+  does not support self-diagnosed error messages.
+
+  All other responses (including 1XX, 2XX, 3XX, 4XX and 5XX) are considered
+  "failing".
+
+  If the server could not be reached, i.e. no status code could be obtained,
+  the service is considered offline.
+
+  This check requires one param: the `url` to which the request will be sent.
   """
+  import Ecto.Changeset
+
   @behaviour Zout.Checker
 
   @impl true
@@ -15,14 +29,54 @@ defmodule Zout.Checker.HttpOk do
   @impl true
   def check(params) do
     url = params["url"]
-    IO.inspect(params)
 
     request = Finch.build(:get, url)
 
     case Finch.request(request, ZoutFinch) do
       {:ok, %Finch.Response{status: 200}} -> :working
-      {:ok, %Finch.Response{status: 500}} -> {:failing, nil}
+      {:ok, %Finch.Response{status: 202}} -> :working
+      {:ok, %Finch.Response{status: 203}} -> :working
+      {:ok, %Finch.Response{status: 204}} -> :working
+      {:ok, %Finch.Response{status: 206}} -> :working
+      {:ok, _} -> {:failing, nil}
       _ -> {:offline, nil}
     end
+  end
+
+  @impl true
+  def changeset(changeset, attrs) do
+    # Migrate properties to a nested changeset
+    data =
+      case changeset.data.params do
+        nil -> %{}
+        p -> p
+      end
+
+    fields = %{url: EctoFields.URL}
+    attrs = %{"url" => Map.get(attrs, "params_url")}
+
+    # Put the changes in the big changeset now; it is validated later.
+    changeset = put_change(changeset, :params, attrs)
+
+    # Validate the nested changeset
+    {data, fields}
+    |> cast(attrs, Map.keys(fields))
+    |> validate_required([:url])
+    # Get the errors from it
+    |> traverse_errors(&Function.identity/1)
+    # Add field information in each error message.
+    |> Enum.flat_map(fn
+      {field, messages} ->
+        Enum.map(messages, fn {message, other} -> {"#{field}: #{message}", other} end)
+    end)
+    # Add the error messages to the big changeset.
+    |> Enum.reduce(
+      changeset,
+      fn error, chg ->
+        validate_change(chg, :params, fn field, _ -> [{field, error}] end)
+      end
+    )
+    # Delete form params.
+    |> delete_change(:params_url)
   end
 end

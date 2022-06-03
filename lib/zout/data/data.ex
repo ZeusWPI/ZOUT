@@ -19,8 +19,10 @@ defmodule Zout.Data do
       [%Project{}, ...]
 
   """
-  def list_projects do
-    Repo.all(Project)
+  def list_projects(deleted \\ false) do
+    Project
+    |> where(deleted: ^deleted)
+    |> Repo.all()
   end
 
   @doc """
@@ -34,7 +36,7 @@ defmodule Zout.Data do
       %Project{}
 
   """
-  def get_project!(id), do: raise("TODO")
+  def get_project!(id), do: Repo.get!(Project, id)
 
   @doc """
   Creates a project.
@@ -49,7 +51,8 @@ defmodule Zout.Data do
 
   """
   def create_project(attrs \\ %{}) do
-    raise "TODO"
+    change_project(%Project{}, attrs)
+    |> Repo.insert()
   end
 
   @doc """
@@ -65,7 +68,8 @@ defmodule Zout.Data do
 
   """
   def update_project(%Project{} = project, attrs) do
-    raise "TODO"
+    change_project(project, attrs)
+    |> Repo.update()
   end
 
   @doc """
@@ -93,14 +97,15 @@ defmodule Zout.Data do
       %Todo{...}
 
   """
-  def change_project(%Project{} = project, _attrs \\ %{}) do
-    raise "TODO"
+  def change_project(%Project{} = project, attrs \\ %{}) do
+    Project.changeset(project, attrs)
   end
 
   def list_projects_and_status do
     now = DateTime.utc_now()
 
     Project
+    |> where(deleted: false)
     |> join(:left, [p], d in Downtime,
       on: p.id == d.project_id and d.start <= ^now and is_nil(d.end)
     )

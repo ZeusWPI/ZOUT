@@ -11,24 +11,32 @@ defmodule ZoutWeb.Router do
   end
 
   pipeline :auth do
-    ZoutWeb.Auth.Pipeline
+    plug ZoutWeb.Auth.Pipeline
   end
 
   pipeline :api do
-    plug :accepts, ["json"]
+    plug :accepts, ["html", "json"]
   end
 
+  # Pages for which JSON is available
   scope "/", ZoutWeb do
-    pipe_through :browser
+    pipe_through [:browser, :auth, :api]
 
-    get "/", PageController, :index
     get "/projects", ProjectController, :index
   end
 
-  scope "/auth", ZoutWeb do
+  # Non-JSON pages.
+  scope "/", ZoutWeb do
     pipe_through [:browser, :auth]
-    get "/:provider/callback", AuthController, :callback
-    get "/:provider", AuthController, :request
+
+    get "/", PageController, :index
+    resources "/projects", ProjectController, except: [:index]
+
+    scope "/auth" do
+      get "/:provider/callback", AuthController, :callback
+      get "/:provider", AuthController, :request
+      post "/logout", AuthController, :logout
+    end
   end
 
   # Other scopes may use custom stacks.
