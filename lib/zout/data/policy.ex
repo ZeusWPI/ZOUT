@@ -9,4 +9,7 @@ defmodule Zout.Data.Policy do
   # Default action: admins can do anything
   @impl true
   def authorize(_action, %User{admin: admin}, _project), do: admin
+
+  @impl true
+  def authorize(_action, nil, _project), do: :error
 end
