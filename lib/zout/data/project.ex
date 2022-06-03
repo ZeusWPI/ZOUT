@@ -12,6 +12,7 @@ defmodule Zout.Data.Project do
     field :home, EctoFields.URL
     field :checker, Ecto.Enum, values: [:http_ok]
     field :params, :map
+    field :deleted, :boolean
 
     timestamps()
   end

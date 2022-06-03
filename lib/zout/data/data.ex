@@ -19,8 +19,10 @@ defmodule Zout.Data do
       [%Project{}, ...]
 
   """
-  def list_projects do
-    Repo.all(Project)
+  def list_projects(deleted \\ false) do
+    Project
+    |> where(deleted: ^deleted)
+    |> Repo.all()
   end
 
   @doc """
@@ -103,6 +105,7 @@ defmodule Zout.Data do
     now = DateTime.utc_now()
 
     Project
+    |> where(deleted: false)
     |> join(:left, [p], d in Downtime,
       on: p.id == d.project_id and d.start <= ^now and is_nil(d.end)
     )
