@@ -1,57 +1,85 @@
 defmodule Zout.DataTest do
-  use Zout.DataCase
+  use Zout.DataCase, async: true
 
   alias Zout.Data
+  alias Zout.Data.Project
 
-  describe "projects" do
-    alias Zout.Data.Project
+  describe "list_projects/1" do
+    test "lists all non-deleted projects" do
+      normal_project = insert(:project)
+      _deleted_project = insert(:project, deleted: true)
 
-    import Zout.DataFixtures
-
-    @invalid_attrs %{}
-
-    test "list_projects/0 returns all projects" do
-      project = project_fixture()
-      assert Data.list_projects() == [project]
+      assert Data.list_projects() == [normal_project]
     end
 
-    test "get_project!/1 returns the project with given id" do
-      project = project_fixture()
-      assert Data.get_project!(project.id) == project
+    test "lists deleted projects when asked" do
+      _normal_project = insert(:project)
+      deleted_project = insert(:project, deleted: true)
+
+      assert Data.list_projects(true) == [deleted_project]
+    end
+  end
+
+  describe "get_project!/1" do
+    test "gets existing projects" do
+      expected_project = insert(:project)
+      actual_project = Data.get_project!(expected_project.id)
+
+      assert actual_project == expected_project
     end
 
-    test "create_project/1 with valid data creates a project" do
-      valid_attrs = %{}
+    test "does not get non-existing user" do
+      assert_raise Ecto.NoResultsError, fn ->
+        Data.get_project!(-1)
+      end
+    end
+  end
+
+  describe "create_project/1" do
+    test "with valid data creates a project" do
+      valid_attrs = %{
+        "name" => "hallo",
+        "checker" => "hydra_api"
+      }
 
       assert {:ok, %Project{} = project} = Data.create_project(valid_attrs)
+      assert project.name == "hallo"
+      assert project.checker == :hydra_api
     end
 
-    test "create_project/1 with invalid data returns error changeset" do
-      assert {:error, %Ecto.Changeset{}} = Data.create_project(@invalid_attrs)
+    test "with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Data.create_project(%{})
+    end
+  end
+
+  describe "update_project/2" do
+    test "with valid data updates the project" do
+      existing_project = insert(:project)
+      update_attrs = %{"name" => existing_project.name <> existing_project.name}
+
+      assert {:ok, %Project{} = project} = Data.update_project(existing_project, update_attrs)
+      assert project.name == existing_project.name <> existing_project.name
+      assert project.checker == existing_project.checker
+      assert project.source == existing_project.source
+      assert project.home == existing_project.home
+      assert project.params == existing_project.params
     end
 
-    test "update_project/2 with valid data updates the project" do
-      project = project_fixture()
-      update_attrs = %{}
-
-      assert {:ok, %Project{} = project} = Data.update_project(project, update_attrs)
+    test "with invalid data returns error changeset" do
+      existing_project = insert(:project)
+      update_attrs = %{"source" => "bliep not an url"}
+      assert {:error, %Ecto.Changeset{}} = Data.update_project(existing_project, update_attrs)
+      new_project = Repo.get!(Project, existing_project.id)
+      assert existing_project == new_project
     end
+  end
 
-    test "update_project/2 with invalid data returns error changeset" do
-      project = project_fixture()
-      assert {:error, %Ecto.Changeset{}} = Data.update_project(project, @invalid_attrs)
-      assert project == Data.get_project!(project.id)
-    end
+  describe "delete_project/1" do
+    # TODO
+  end
 
-    test "delete_project/1 deletes the project" do
-      project = project_fixture()
-      assert {:ok, %Project{}} = Data.delete_project(project)
-      assert_raise Ecto.NoResultsError, fn -> Data.get_project!(project.id) end
-    end
-
-    test "change_project/1 returns a project changeset" do
-      project = project_fixture()
-      assert %Ecto.Changeset{} = Data.change_project(project)
-    end
+  test "change_project/1 returns a project changeset" do
+    project = build(:project)
+    assert %Ecto.Changeset{} = Data.change_project(project)
   end
 end

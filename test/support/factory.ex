@@ -7,10 +7,10 @@ defmodule Zout.Factory do
 
   def project_factory do
     %Zout.Data.Project{
-      name: "Zeus WPI",
-      slug: "zeus-site",
+      name: sequence("name"),
       checker: :http_ok,
-      params: %{url: "https://zeus.ugent.be"},
+      deleted: false,
+      params: %{"url" => "https://zeus.ugent.be"},
       inserted_at: database_datetime(),
       updated_at: database_datetime()
     }

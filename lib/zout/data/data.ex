@@ -12,12 +12,6 @@ defmodule Zout.Data do
 
   @doc """
   Returns the list of projects.
-
-  ## Examples
-
-      iex> list_projects()
-      [%Project{}, ...]
-
   """
   def list_projects(deleted \\ false) do
     Project
@@ -29,26 +23,11 @@ defmodule Zout.Data do
   Gets a single project.
 
   Raises if the Project does not exist.
-
-  ## Examples
-
-      iex> get_project!(123)
-      %Project{}
-
   """
   def get_project!(id), do: Repo.get!(Project, id)
 
   @doc """
   Creates a project.
-
-  ## Examples
-
-      iex> create_project(%{field: value})
-      {:ok, %Project{}}
-
-      iex> create_project(%{field: bad_value})
-      {:error, ...}
-
   """
   def create_project(attrs \\ %{}) do
     change_project(%Project{}, attrs)
@@ -57,15 +36,6 @@ defmodule Zout.Data do
 
   @doc """
   Updates a project.
-
-  ## Examples
-
-      iex> update_project(project, %{field: new_value})
-      {:ok, %Project{}}
-
-      iex> update_project(project, %{field: bad_value})
-      {:error, ...}
-
   """
   def update_project(%Project{} = project, attrs) do
     change_project(project, attrs)
@@ -74,15 +44,6 @@ defmodule Zout.Data do
 
   @doc """
   Deletes a Project.
-
-  ## Examples
-
-      iex> delete_project(project)
-      {:ok, %Project{}}
-
-      iex> delete_project(project)
-      {:error, ...}
-
   """
   def delete_project(%Project{} = project) do
     raise "TODO"
@@ -90,17 +51,14 @@ defmodule Zout.Data do
 
   @doc """
   Returns a data structure for tracking project changes.
-
-  ## Examples
-
-      iex> change_project(project)
-      %Todo{...}
-
   """
   def change_project(%Project{} = project, attrs \\ %{}) do
     Project.changeset(project, attrs)
   end
 
+  @doc """
+  List all projects, but get the active downtime for each.
+  """
   def list_projects_and_status do
     now = DateTime.utc_now()
 

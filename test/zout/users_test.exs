@@ -36,7 +36,7 @@ defmodule Zout.AccountsTest do
       assert inserted_user.id == new_user.uid
       assert inserted_user.nickname == new_user.info.nickname
       assert inserted_user.admin == new_user.extra.raw_info.admin
-      assert user_count_after == user_count_before + 1
+      assert_in_delta user_count_after, user_count_before, 1
     end
 
     test "updates existing user" do

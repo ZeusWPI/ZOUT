@@ -1,84 +1,169 @@
 defmodule ZoutWeb.ProjectControllerTest do
   use ZoutWeb.ConnCase
 
-  import Zout.DataFixtures
-
-  @create_attrs %{}
-  @update_attrs %{}
-  @invalid_attrs %{}
-
   describe "index" do
-    test "lists all projects", %{conn: conn} do
+    test "lists all undeleted projects", %{conn: conn} do
+      project1 = insert(:project)
+      project2 = insert(:project)
+      project3 = insert(:project, deleted: true)
       conn = get(conn, Routes.project_path(conn, :index))
-      assert html_response(conn, 200) =~ "Listing Projects"
+      assert html_response(conn, 200) =~ project1.name
+      assert html_response(conn, 200) =~ project2.name
+      refute html_response(conn, 200) =~ project3.name
     end
   end
 
   describe "new project" do
-    test "renders form", %{conn: conn} do
+    test "renders form for admins", %{conn: conn} do
+      admin = insert(:admin)
+      conn = login(conn, admin)
       conn = get(conn, Routes.project_path(conn, :new))
-      assert html_response(conn, 200) =~ "New Project"
-    end
-  end
-
-  describe "create project" do
-    test "redirects to show when data is valid", %{conn: conn} do
-      conn = post(conn, Routes.project_path(conn, :create), project: @create_attrs)
-
-      assert %{id: id} = redirected_params(conn)
-      assert redirected_to(conn) == Routes.project_path(conn, :show, id)
-
-      conn = get(conn, Routes.project_path(conn, :show, id))
-      assert html_response(conn, 200) =~ "Show Project"
+      assert html_response(conn, 200) =~ "Nieuw project"
     end
 
-    test "renders errors when data is invalid", %{conn: conn} do
-      conn = post(conn, Routes.project_path(conn, :create), project: @invalid_attrs)
-      assert html_response(conn, 200) =~ "New Project"
-    end
-  end
+    test "does not render form for normal users", %{conn: conn} do
+      user = insert(:user)
+      conn = login(conn, user)
 
-  describe "edit project" do
-    setup [:create_project]
-
-    test "renders form for editing chosen project", %{conn: conn, project: project} do
-      conn = get(conn, Routes.project_path(conn, :edit, project))
-      assert html_response(conn, 200) =~ "Edit Project"
-    end
-  end
-
-  describe "update project" do
-    setup [:create_project]
-
-    test "redirects when data is valid", %{conn: conn, project: project} do
-      conn = put(conn, Routes.project_path(conn, :update, project), project: @update_attrs)
-      assert redirected_to(conn) == Routes.project_path(conn, :show, project)
-
-      conn = get(conn, Routes.project_path(conn, :show, project))
-      assert html_response(conn, 200)
+      assert_raise Bodyguard.NotAuthorizedError, fn ->
+        get(conn, Routes.project_path(conn, :new))
+      end
     end
 
-    test "renders errors when data is invalid", %{conn: conn, project: project} do
-      conn = put(conn, Routes.project_path(conn, :update, project), project: @invalid_attrs)
-      assert html_response(conn, 200) =~ "Edit Project"
-    end
-  end
-
-  describe "delete project" do
-    setup [:create_project]
-
-    test "deletes chosen project", %{conn: conn, project: project} do
-      conn = delete(conn, Routes.project_path(conn, :delete, project))
-      assert redirected_to(conn) == Routes.project_path(conn, :index)
-
-      assert_error_sent 404, fn ->
-        get(conn, Routes.project_path(conn, :show, project))
+    test "does not render form for non-users", %{conn: conn} do
+      assert_raise Bodyguard.NotAuthorizedError, fn ->
+        get(conn, Routes.project_path(conn, :new))
       end
     end
   end
 
-  defp create_project(_) do
-    project = project_fixture()
-    %{project: project}
+  describe "create project" do
+    test "redirects to show when data is valid if admin", %{conn: conn} do
+      conn = login(conn, insert(:admin))
+
+      valid_attrs = %{
+        "name" => "hallo",
+        "checker" => "hydra_api"
+      }
+
+      conn = post(conn, Routes.project_path(conn, :create), project: valid_attrs)
+
+      assert redirected_to(conn) == Routes.project_path(conn, :index)
+    end
+
+    test "renders errors when data is invalid", %{conn: conn} do
+      conn = login(conn, insert(:admin))
+      conn = post(conn, Routes.project_path(conn, :create), project: %{})
+      assert html_response(conn, 422) =~ "Nieuw project"
+    end
+
+    test "fails if normal user", %{conn: conn} do
+      conn = login(conn, insert(:user))
+
+      valid_attrs = %{
+        "name" => "hallo",
+        "checker" => "hydra_api"
+      }
+
+      assert_raise Bodyguard.NotAuthorizedError, fn ->
+        post(conn, Routes.project_path(conn, :create), project: valid_attrs)
+      end
+    end
+
+    test "fails without user", %{conn: conn} do
+      valid_attrs = %{
+        "name" => "hallo",
+        "checker" => "hydra_api"
+      }
+
+      assert_raise Bodyguard.NotAuthorizedError, fn ->
+        post(conn, Routes.project_path(conn, :create), project: valid_attrs)
+      end
+    end
+  end
+
+  describe "edit project" do
+    test "renders form for admins", %{conn: conn} do
+      project = insert(:project)
+      admin = insert(:admin)
+      conn = login(conn, admin)
+      conn = get(conn, Routes.project_path(conn, :edit, project))
+      assert html_response(conn, 200) =~ "#{project.name} bewerken"
+    end
+
+    test "does not render form for normal users", %{conn: conn} do
+      project = insert(:project)
+      user = insert(:user)
+      conn = login(conn, user)
+
+      assert_raise Bodyguard.NotAuthorizedError, fn ->
+        get(conn, Routes.project_path(conn, :edit, project))
+      end
+    end
+
+    test "does not render form for non-users", %{conn: conn} do
+      project = insert(:project)
+
+      assert_raise Bodyguard.NotAuthorizedError, fn ->
+        get(conn, Routes.project_path(conn, :edit, project))
+      end
+    end
+  end
+
+  describe "update project" do
+    test "redirects to show when data is valid if admin", %{conn: conn} do
+      valid_attrs = %{
+        "name" => "hallo",
+        "checker" => "hydra_api"
+      }
+
+      project = insert(:project)
+      conn = login(conn, insert(:admin))
+      conn = patch(conn, Routes.project_path(conn, :update, project), project: valid_attrs)
+
+      assert redirected_to(conn) == Routes.project_path(conn, :index)
+    end
+
+    test "renders errors when data is invalid", %{conn: conn} do
+      attrs = %{
+        "home" => "not an url"
+      }
+
+      project = insert(:project)
+      conn = login(conn, insert(:admin))
+      conn = patch(conn, Routes.project_path(conn, :update, project), project: attrs)
+      assert html_response(conn, 422) =~ "#{project.name} bewerken"
+    end
+
+    test "fails if normal user", %{conn: conn} do
+      valid_attrs = %{
+        "name" => "hallo",
+        "checker" => "hydra_api"
+      }
+
+      project = insert(:project)
+      conn = login(conn, insert(:user))
+
+      assert_raise Bodyguard.NotAuthorizedError, fn ->
+        patch(conn, Routes.project_path(conn, :update, project), project: valid_attrs)
+      end
+    end
+
+    test "fails without user", %{conn: conn} do
+      valid_attrs = %{
+        "name" => "hallo",
+        "checker" => "hydra_api"
+      }
+
+      project = insert(:project)
+
+      assert_raise Bodyguard.NotAuthorizedError, fn ->
+        patch(conn, Routes.project_path(conn, :update, project), project: valid_attrs)
+      end
+    end
+  end
+
+  describe "delete project" do
+    # TODO
   end
 end

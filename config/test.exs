@@ -28,3 +28,8 @@ config :logger, level: :warn
 
 # Initialize plugs at runtime for faster test compilation
 config :phoenix, :plug_init_mode, :runtime
+
+# Guardian token for cookies
+config :zout, ZoutWeb.Auth.Guardian,
+  issuer: "zout",
+  secret_key: "S75heLj8yJOXPohixmJdpLotLbVYVBMwYXXI5xxlD7VWklROQooxoaKVMqNeXpHr"

@@ -23,11 +23,23 @@ defmodule ZoutWeb.ConnCase do
       import Plug.Conn
       import Phoenix.ConnTest
       import ZoutWeb.ConnCase
+      import Zout.Factory
 
       alias ZoutWeb.Router.Helpers, as: Routes
 
       # The default endpoint for testing
       @endpoint ZoutWeb.Endpoint
+
+      @doc """
+      Log the user in by putting the data in the conn.
+      """
+      @spec login(%Plug.Conn{}, %Zout.Accounts.User{}) :: %Plug.Conn{}
+      def login(conn, user) do
+        conn
+        |> ZoutWeb.Auth.Guardian.Plug.sign_out()
+        |> ZoutWeb.Auth.Guardian.Plug.sign_in(user)
+        |> ZoutWeb.Auth.Pipeline.call([])
+      end
     end
   end
 

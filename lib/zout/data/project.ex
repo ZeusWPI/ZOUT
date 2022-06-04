@@ -7,7 +7,6 @@ defmodule Zout.Data.Project do
 
   schema "projects" do
     field :name, :string
-    field :slug, EctoFields.Slug
     field :source, EctoFields.URL
     field :home, EctoFields.URL
     field :checker, Ecto.Enum, values: [:http_ok, :hydra_api]
@@ -25,14 +24,10 @@ defmodule Zout.Data.Project do
   end
 
   def changeset(project, attrs \\ %{}) do
-    # Hehehe this is not clean :\
-    attrs = Map.put(attrs, "slug", Map.get(attrs, "name"))
-
     project
-    |> cast(attrs, [:name, :source, :home, :checker, :slug])
+    |> cast(attrs, [:name, :source, :home, :checker])
     |> validate_required([:name, :checker])
     |> unique_constraint(:name)
-    |> unique_constraint(:slug)
     |> handle_checker(attrs)
     |> validate_required([:params])
   end
