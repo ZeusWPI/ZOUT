@@ -38,7 +38,7 @@ defmodule ZoutWeb.AuthController do
   end
 
   def callback(%{assigns: %{ueberauth_auth: auth}} = conn, params) do
-    user = Accounts.update_or_create(auth)
+    user = Accounts.update_or_create!(auth)
 
     redirect_url =
       case get_session(conn, :after_login_redirect) do

@@ -24,6 +24,7 @@ defmodule Zout.DataCase do
       import Ecto.Changeset
       import Ecto.Query
       import Zout.DataCase
+      import Zout.Factory
     end
   end
 

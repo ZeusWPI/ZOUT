@@ -5,7 +5,7 @@ defmodule Zout.Data.Downtime do
   schema "downtimes" do
     field :end, :utc_datetime
     field :start, :utc_datetime
-    field :project_id, :id
+    belongs_to :project, Zout.Data.Project
     field :status, Ecto.Enum, values: [:working, :failing, :offline]
 
     timestamps()

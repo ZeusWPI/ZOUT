@@ -6,7 +6,7 @@ defmodule Zout.Accounts do
   @doc """
   Update or create our user instance from the auth data.
   """
-  def update_or_create(%Ueberauth.Auth{
+  def update_or_create!(%Ueberauth.Auth{
         uid: id,
         info: info,
         extra: %Ueberauth.Auth.Extra{raw_info: %{admin: admin}}
