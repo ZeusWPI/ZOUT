@@ -21,7 +21,7 @@ defmodule ZoutWeb.ProjectController do
 
             "avail" ->
               projects_and_pings =
-                Data.all_recent_pings(months: -2)
+                Data.all_recent_pings(months: -1)
                 |> Enum.group_by(fn %{project: p} -> p end, fn %{ping: p} -> p end)
 
               [format: :avail, projects_and_pings: projects_and_pings]

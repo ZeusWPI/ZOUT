@@ -125,6 +125,7 @@ defmodule Zout.Data do
         SELECT * FROM pings
         WHERE project_id = ? and stamp > ?
         ORDER BY stamp
+        LIMIT 2000
         """,
         p.id,
         ^ago

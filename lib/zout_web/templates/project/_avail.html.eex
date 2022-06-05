@@ -40,7 +40,10 @@
     y_percentage: {
       enabled: true
     },
-    moment_locale: 'nl'
+    moment_locale: 'nl',
+    zoom: {
+      enabled:true
+    },
   };
 
   window.visavail.generate(options, dataset);
