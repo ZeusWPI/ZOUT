@@ -6,37 +6,21 @@
 </div>
 <div class="card">
   <div class="card-content">
-    <table class="table--responsive">
-      <thead>
-      <tr>
-        <th>Project</th>
-        <th>Status</th>
-        <th>Acties</th>
-      </tr>
-      </thead>
-      <tbody>
-        <%= for %{ project: project, ping: ping, last_ping: last_ping } <- @projects_and_pings do %>
-          <tr>
-            <td class="order-item-info"><%= link project.name, to: Routes.project_path(@conn, :show, project) %></td>
-            <td>
-              <%= render_status(ping, last_ping) %>
-            </td>
-            <td>
-              <%= if can?(@conn, :project_edit, project) do %>
-                <%= link "Bewerken", to: Routes.project_path(@conn, :edit, project) %>
-              <% end %>
-            </td>
-          </tr>
-        <% end %>
-      </tbody>
-    </table>
-    <div class="mt-3">
-      <div class="is-flex is-justify-content-space-between is-align-content-center">
-        <span class="mt-4">Laatst gecontroleerd: <%= render_last_checked(@projects_and_pings) %></span>
-        <%= if can?(@conn, :project_new) do %>
-          <%= link "Nieuw project", to: Routes.project_path(@conn, :new), class: "button is-primary" %>
-        <% end %>
-      </div>
+    <div class="tabs is-toggle">
+      <ul>
+        <li class="<%= if @format == :table, do: "is-active", else: "" %>">
+          <%= link "Tabel", to: Routes.project_path(@conn, :index, format: "table") %>
+        </li>
+        <li class="<%= if @format == :avail, do: "is-active", else: "" %>">
+          <%= link "Overzichtsgrafiek", to: Routes.project_path(@conn, :index, format: "avail") %>
+        </li>
+      </ul>
     </div>
+    <%= case @format do
+        :table ->
+          render "_table.html", conn: @conn, projects_and_pings: @projects_and_pings
+        :avail ->
+          render "_avail.html", conn: @conn, projects_and_pings: @projects_and_pings
+      end %>
   </div>
 </div>

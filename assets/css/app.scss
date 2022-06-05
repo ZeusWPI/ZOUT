@@ -17,6 +17,26 @@
   font-family: $body-family;
 }
 
+// Colours in the graph
+.rect_working {
+  fill: green;
+  &:hover {
+    fill: darkgreen;
+  }
+}
+.rect_failing {
+  fill: orange;
+  &:hover {
+    fill: darkgoldenrod;
+  }
+}
+.rect_offline {
+  fill: red;
+  &:hover {
+    fill: darkred;
+  }
+}
+
 /* Alerts and form errors used by phx.new */
 .alert {
   padding: 15px;

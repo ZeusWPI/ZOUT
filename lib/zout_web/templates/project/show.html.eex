@@ -10,20 +10,8 @@
     </div>
   </div>
 </div>
-<style>
-  .rect_working {
-    fill: green
-  }
-  .rect_failing {
-    fill: orange;
-  }
-  .rect_offline {
-    fill: red;
-  }
-</style>
 <script type="application/javascript">
   const dataset = [{
-    'interval_s': 60, // time period in seconds a single data point is expected to cover
     'categories': { // category names and their colors defined here
       'working': { class: 'rect_working', tooltip_html: '🟢 working • ' },
       'failing': { class: 'rect_failing', tooltip_html: '🟠 failing • ' },
@@ -54,9 +42,6 @@
       enabled: true,
     },
     y_percentage: {
-      enabled: true
-    },
-    legend: {
       enabled: true
     },
     moment_locale: 'nl',

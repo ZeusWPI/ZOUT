@@ -7,12 +7,32 @@ defmodule ZoutWeb.ProjectController do
   alias Zout.Data.Project
   alias ZoutWeb.Auth.Guardian
 
-  def index(conn, _params) do
+  def index(conn, params) do
     user = Guardian.Plug.current_resource(conn)
     Bodyguard.permit!(Data.Policy, :project_index, user)
 
-    projects_and_pings = Data.list_projects_and_status()
-    render(conn, :index, projects_and_pings: projects_and_pings)
+    params =
+      case get_format(conn) do
+        "html" ->
+          case Map.get(params, "format") do
+            v when v in [nil, "table"] ->
+              projects_and_pings = Data.list_projects_and_status()
+              [format: :table, projects_and_pings: projects_and_pings]
+
+            "avail" ->
+              projects_and_pings =
+                Data.all_recent_pings(months: -2)
+                |> Enum.group_by(fn %{project: p} -> p end, fn %{ping: p} -> p end)
+
+              [format: :avail, projects_and_pings: projects_and_pings]
+          end
+
+        "json" ->
+          projects_and_pings = Data.list_projects_and_status()
+          [projects_and_pings: projects_and_pings]
+      end
+
+    render(conn, :index, params)
   end
 
   def new(conn, _params) do

@@ -109,6 +109,35 @@ defmodule Zout.Data do
     |> Repo.all()
   end
 
+  @doc """
+  Get recent pings for all projects.
+  TODO: how does this perform with a lot of pings? Who knows.
+  """
+  def all_recent_pings(duration) do
+    ago = Timex.now() |> Timex.shift(duration)
+
+    Project
+    |> join(
+      :inner_lateral,
+      [p],
+      pi in fragment(
+        """
+        SELECT * FROM pings
+        WHERE project_id = ? and stamp > ?
+        ORDER BY stamp
+        """,
+        p.id,
+        ^ago
+      ),
+      on: true
+    )
+    |> select([p, pi], %{
+      project: %{id: p.id, name: p.name},
+      ping: %{status: pi.status, stamp: pi.stamp}
+    })
+    |> Repo.all()
+  end
+
   defp handle_check_result(%Project{id: id}, {status, message, response_time}) do
     Repo.insert!(%Ping{
       stamp: DateTime.utc_now() |> DateTime.truncate(:second),

@@ -1,0 +1,47 @@
+<div  class="visavail" id="availability-chart-container">
+  <div id="availability-chart"></div>
+</div>
+<script type="application/javascript">
+
+  const dataset = [
+    <%= for {project, pings} <- @projects_and_pings do %>
+      {
+        'measure': "<%= project.name %>",
+        'categories': { // same for all datasets
+          'working': { class: 'rect_working', tooltip_html: '🟢 working • ' },
+          'failing': { class: 'rect_failing', tooltip_html: '🟠 failing • ' },
+          'offline': { class: 'rect_offline', tooltip_html: '🔴 offline • ' },
+        },
+        'category_percentage': 'working',
+        'data': [
+          <%= for %{status: status, stamp: stamp} <- pings do %>
+            ["<%= Timex.format!(stamp, "{YYYY}-{0M}-{0D} {h24}:{m}:{s}") %>", "<%= status %>"],
+          <% end %>
+        ]
+      },
+    <% end %>
+  ];
+
+  const options = {
+    id_div_container: 'availability-chart-container',
+    id_div_graph: 'availability-chart',
+    date_in_utc: true,
+    custom_categories: true,
+    title: {
+      text: 'Visualisatie der toestanden'
+    },
+    sub_title: {
+      from_text: 'van',
+      to_text: 'tot'
+    },
+    responsive: {
+      enabled: true,
+    },
+    y_percentage: {
+      enabled: true
+    },
+    moment_locale: 'nl'
+  };
+
+  window.visavail.generate(options, dataset);
+</script>
