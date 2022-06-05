@@ -69,6 +69,8 @@ defmodule ZoutWeb.ProjectController do
     project = Data.get_project!(id)
     Bodyguard.permit!(Data.Policy, :project_show, user, project)
 
-    render(conn, :show, project: project)
+    historical_data = Data.recent_pings(project, months: -2)
+
+    render(conn, :show, project: project, historical_data: historical_data)
   end
 end

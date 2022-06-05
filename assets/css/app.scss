@@ -1,6 +1,22 @@
 /* This file is for your main application CSS */
 @import "./tap.scss";
 
+@import "visavail/visavail.css";
+// Override some visavail font choices...
+.visavail-tooltip div.tooltip-top,
+.visavail-tooltip div.tooltip-overlay,
+.visavail-ytitle-tooltip div.y-tooltip,
+.visavail .ytitle,
+.visavail .ypercentage,
+.visavail .xAxis text,
+.visavail .heading,
+.visavail .subheading,
+.visavail .subchart-xAxis text,
+.visavail .legend
+{
+  font-family: $body-family;
+}
+
 /* Alerts and form errors used by phx.new */
 .alert {
   padding: 15px;

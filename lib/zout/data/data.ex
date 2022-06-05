@@ -96,6 +96,19 @@ defmodule Zout.Data do
     |> Repo.all()
   end
 
+  @doc """
+  Get the most recent pings in the last `limit` hours for a project.
+  """
+  @spec recent_pings(%Project{}, Timex.shift_options()) :: [%Ping{}]
+  def recent_pings(%Project{id: id}, duration) do
+    ago = Timex.now() |> Timex.shift(duration)
+
+    Ping
+    |> where([p], p.project_id == ^id and p.stamp >= ^ago)
+    |> order_by(desc: :stamp)
+    |> Repo.all()
+  end
+
   defp handle_check_result(%Project{id: id}, {status, message, response_time}) do
     Repo.insert!(%Ping{
       stamp: DateTime.utc_now() |> DateTime.truncate(:second),

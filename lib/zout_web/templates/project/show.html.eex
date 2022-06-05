@@ -5,6 +5,69 @@
 </div>
 <div class="card">
   <div class="card-content">
-    Iets van content?
+    <div  class="visavail" id="availability-chart-container">
+      <div id="availability-chart"></div>
+    </div>
   </div>
 </div>
+<style>
+  .rect_working {
+    fill: green
+  }
+  .rect_failing {
+    fill: orange;
+  }
+  .rect_offline {
+    fill: red;
+  }
+</style>
+<script type="application/javascript">
+  const dataset = [{
+    'interval_s': 60, // time period in seconds a single data point is expected to cover
+    'categories': { // category names and their colors defined here
+      'working': { class: 'rect_working', tooltip_html: '🟢 working • ' },
+      'failing': { class: 'rect_failing', tooltip_html: '🟠 failing • ' },
+      'offline': { class: 'rect_offline', tooltip_html: '🔴 offline • ' },
+    },
+    "category_percentage": "working",
+    'data': [
+      <%= for %Ping{status: status, stamp: stamp} <- Enum.reverse(@historical_data) do %>
+        ["<%= Timex.format!(stamp, "{YYYY}-{0M}-{0D} {h24}:{m}:{s}") %>", "<%= status %>"],
+      <% end %>
+    ]
+  }];
+
+  const options = {
+    id_div_container: 'availability-chart-container',
+    id_div_graph: 'availability-chart',
+    date_in_utc: true,
+    show_y_title: false,
+    custom_categories: true,
+    title: {
+      text: 'Visualisatie der toestanden'
+    },
+    sub_title: {
+      from_text: 'van',
+      to_text: 'tot'
+    },
+    responsive: {
+      enabled: true,
+    },
+    y_percentage: {
+      enabled: true
+    },
+    legend: {
+      enabled: true
+    },
+    moment_locale: 'nl',
+    padding: {
+      left: -30
+    },
+    margin: {
+      left: 30
+    }
+  };
+
+  window.visavail.generate(options, dataset);
+
+</script>
