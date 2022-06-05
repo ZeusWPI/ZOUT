@@ -11,8 +11,8 @@ defmodule ZoutWeb.ProjectController do
     user = Guardian.Plug.current_resource(conn)
     Bodyguard.permit!(Data.Policy, :project_index, user)
 
-    projects = Data.list_projects_and_status()
-    render(conn, :index, projects: projects)
+    projects_and_pings = Data.list_projects_and_status()
+    render(conn, :index, projects_and_pings: projects_and_pings)
   end
 
   def new(conn, _params) do

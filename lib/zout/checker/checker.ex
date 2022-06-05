@@ -26,7 +26,10 @@ defmodule Zout.Checker do
   For failing and offline results, the check may return an error message that
   will be displayed to users.
   """
-  @callback check(map()) :: :working | {:failing, String.t() | nil} | {:offline, String.t() | nil}
+  @callback check(map()) ::
+              :working
+              | {:failing, String.t() | nil}
+              | {:offline, String.t() | nil, integer() | nil}
 
   @doc """
   Extract the necessary params from the changeset.

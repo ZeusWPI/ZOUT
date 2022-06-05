@@ -15,11 +15,11 @@
       </tr>
       </thead>
       <tbody>
-        <%= for %{ project: project, downtime: downtime } <- @projects do %>
+        <%= for %{ project: project, ping: ping, last_ping: last_ping } <- @projects_and_pings do %>
           <tr>
             <td class="order-item-info"><%= link project.name, to: Routes.project_path(@conn, :show, project) %></td>
             <td>
-              <%= render_status(downtime) %>
+              <%= render_status(ping, last_ping) %>
             </td>
             <td>
               <%= if can?(@conn, :project_edit, project) do %>
@@ -31,10 +31,11 @@
       </tbody>
     </table>
     <div class="mt-3">
-      <div class="is-flex is-justify-content-flex-end">
+      <div class="is-flex is-justify-content-space-between is-align-content-center">
+        <span class="mt-4">Laatst gecontroleerd: <%= render_last_checked(@projects_and_pings) %></span>
         <%= if can?(@conn, :project_new) do %>
-        <%= link "Nieuw project", to: Routes.project_path(@conn, :new), class: "button is-primary" %>
-      <% end %>
+          <%= link "Nieuw project", to: Routes.project_path(@conn, :new), class: "button is-primary" %>
+        <% end %>
       </div>
     </div>
   </div>

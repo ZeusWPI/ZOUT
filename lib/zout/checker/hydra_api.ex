@@ -19,9 +19,9 @@ defmodule Zout.Checker.HydraApi do
     oldest_allowed = Timex.subtract(Timex.now(), Timex.Duration.from_hours(24))
 
     if Timex.compare(last_run, oldest_allowed) == -1 do
-      {:failing, "Scraper has not run in the last 24 hours"}
+      {:failing, "Scraper has not run in the last 24 hours", nil}
     else
-      :working
+      {:working, nil, nil}
     end
   end
 
@@ -29,13 +29,13 @@ defmodule Zout.Checker.HydraApi do
     dir_listing = parse_directory_listing(body)
 
     if length(dir_listing) != 5 do
-      {:failing, "API format changed, adjust checker"}
+      {:failing, "API format changed, adjust checker", nil}
     else
       date = Enum.at(dir_listing, 3) |> Enum.at(1)
 
       case Timex.parse(date, "{0D}-{Mshort}-{YYYY} {h24}:{m}") do
         {:ok, datetime} -> check_recentness(datetime)
-        _ -> {:failing, "Could not parse date"}
+        _ -> {:failing, "Could not parse date", nil}
       end
     end
   end

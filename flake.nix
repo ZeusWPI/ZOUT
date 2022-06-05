@@ -28,7 +28,7 @@
               pkgs.nixpkgs-fmt
               pkgs.erlang
               pkgs.elixir
-              pkgs.postgresql_14
+              (pkgs.postgresql_14.withPackages (p: [ p.timescaledb ]))
               pkgs.inotify-tools
               pkgs.nodejs-16_x
             ];
@@ -50,6 +50,7 @@
                 command = ''
                   initdb --encoding=UTF8 --no-locale --no-instructions -U postgres
                   echo "unix_socket_directories = '$PGDATA'" >> $PGDATA/postgresql.conf
+                  echo "shared_preload_libraries = 'timescaledb'" >> $PGDATA/postgresql.conf
                   echo "CREATE USER postgres WITH PASSWORD 'postgres' CREATEDB;" | postgres --single -E postgres
                   echo "CREATE DATABASE zout_dev;" | postgres --single -E postgres
                 '';

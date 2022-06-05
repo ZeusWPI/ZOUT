@@ -16,13 +16,11 @@ defmodule Zout.Factory do
     }
   end
 
-  def downtime_factory do
-    %Zout.Data.Downtime{
-      start: database_datetime(),
+  def ping_factory do
+    %Zout.Data.Ping{
+      stamp: database_datetime(),
       project: build(:project),
-      status: :failing,
-      inserted_at: database_datetime(),
-      updated_at: database_datetime()
+      status: :failing
     }
   end
 

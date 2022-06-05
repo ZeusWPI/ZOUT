@@ -1,6 +1,16 @@
 # Zout [![Elixir CI](https://github.com/ZeusWPI/ZOUT/actions/workflows/elixir.yml/badge.svg)](https://github.com/ZeusWPI/ZOUT/actions/workflows/elixir.yml) [![Coverage Status](https://coveralls.io/repos/github/ZeusWPI/ZOUT/badge.svg?branch=master)](https://coveralls.io/github/ZeusWPI/ZOUT?branch=master)
 
-To start your Phoenix server:
+## Installing dev environment
+
+Enlightened people can use the nix flake.
+Others need to search how to install:
+
+- Elixir 1.13
+- PostgreSQL 14
+- TimescaleDB extension for PostgresSQL
+- Node
+
+Then, to start your Phoenix server:
 
   * Install asset dependencies with `cd assets && npm install`
   * Install dependencies with `mix deps.get`

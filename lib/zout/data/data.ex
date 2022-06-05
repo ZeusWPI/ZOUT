@@ -7,7 +7,7 @@ defmodule Zout.Data do
   alias Zout.Repo
 
   alias Zout.Data.Project
-  alias Zout.Data.Downtime
+  alias Zout.Data.Ping
   alias Zout.Checker
 
   @doc """
@@ -57,60 +57,53 @@ defmodule Zout.Data do
   end
 
   @doc """
-  List all projects, but get the active downtime for each.
+  List all projects and status information.
+
+  The returned list will contain each active project, with:
+
+  - The latest ping to display the current status.
+  - The lastet ping with a different status.
+
+  Note that this last one cheats a bit: to be exact, we would want the earliest
+  ping in the previous sequence of pings with a different status (the pings in
+  a sequence all have the same status).
+
+  For example, if there are two failing pings A, B, followed by three offline
+  ping C, D, E, this function would current return E as first ping and B as the
+  second ping. However, ideally we would want C as the second ping. However, I
+  haven't figured out the SQL for thas.
+
   """
   def list_projects_and_status do
-    now = DateTime.utc_now()
+    most_recent_ping_query =
+      Ping
+      |> distinct(:project_id)
+      |> order_by([:project_id, desc: :stamp])
 
     Project
     |> where(deleted: false)
-    |> join(:left, [p], d in Downtime,
-      on: p.id == d.project_id and d.start <= ^now and is_nil(d.end)
+    |> join(:left, [p], c in subquery(most_recent_ping_query), on: p.id == c.project_id)
+    |> join(
+      :left_lateral,
+      [p, c],
+      d in fragment(
+        "(SELECT DISTINCT ON (project_id) * FROM pings WHERE status != ? ORDER BY project_id, stamp DESC)",
+        c.status
+      ),
+      on: p.id == d.project_id
     )
-    |> select([p, d], %{project: p, downtime: d})
+    |> select([p, c, d], %{project: p, ping: c, last_ping: %{stamp: d.stamp, status: d.status}})
     |> Repo.all()
   end
 
-  defp handle_check_result(%Project{id: id}, :working) do
-    existing =
-      Downtime
-      |> where([d], d.project_id == ^id and is_nil(d.end))
-      |> Repo.one()
-
-    if !is_nil(existing) do
-      Ecto.Changeset.change(existing, end: DateTime.utc_now() |> DateTime.truncate(:second))
-      |> Repo.update!()
-    end
-  end
-
-  defp handle_check_result(%Project{id: id}, {status, _message}) do
-    existing =
-      Downtime
-      |> where([d], d.project_id == ^id and is_nil(d.end))
-      |> Repo.one()
-
-    if is_nil(existing) do
-      Repo.insert!(%Downtime{
-        start: DateTime.utc_now() |> DateTime.truncate(:second),
-        end: nil,
-        project_id: id,
-        status: status
-      })
-    else
-      if existing.status != status do
-        now = DateTime.utc_now() |> DateTime.truncate(:second)
-
-        Ecto.Changeset.change(existing, end: now)
-        |> Repo.update!()
-
-        Repo.insert!(%Downtime{
-          start: now,
-          end: nil,
-          project_id: id,
-          status: status
-        })
-      end
-    end
+  defp handle_check_result(%Project{id: id}, {status, message, response_time}) do
+    Repo.insert!(%Ping{
+      stamp: DateTime.utc_now() |> DateTime.truncate(:second),
+      project_id: id,
+      status: status,
+      message: message,
+      response_time: response_time
+    })
   end
 
   @doc """

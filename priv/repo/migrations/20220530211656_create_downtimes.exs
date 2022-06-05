@@ -3,7 +3,7 @@ defmodule Zout.Repo.Migrations.CreateDowntimes do
 
   def change do
     create_query = "CREATE TYPE downtime_status AS ENUM ('offline', 'working', 'failing')"
-    drop_query = "DROP TYPE status"
+    drop_query = "DROP TYPE downtime_status"
     execute(create_query, drop_query)
 
     create table(:downtimes) do
