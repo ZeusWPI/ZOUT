@@ -5,6 +5,14 @@ import '../css/app.scss';
 import * as visavail from "visavail";
 import 'moment/locale/nl-be.js';
 
+import cytoscape from 'cytoscape';
+import nodeHtmlLabel from "cytoscape-node-html-label";
+
+//register panzoom extension
+if (typeof cytoscape("core", "nodeHtmlLabel") !== "function") {
+  nodeHtmlLabel(cytoscape);
+}
+
 // If you want to use Phoenix channels, run `mix help phx.gen.channel`
 // to get started and then uncomment the line below.
 // import "./user_socket.js"
@@ -46,3 +54,4 @@ liveSocket.connect();
 // >> liveSocket.disableLatencySim()
 window.liveSocket = liveSocket;
 window.visavail = visavail;
+window.cytoscape = cytoscape;

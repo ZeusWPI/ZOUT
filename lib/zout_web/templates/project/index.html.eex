@@ -14,6 +14,9 @@
         <li class="<%= if @format == :avail, do: "is-active", else: "" %>">
           <%= link "Overzichtsgrafiek", to: Routes.project_path(@conn, :index, format: "avail") %>
         </li>
+        <li class="<%= if @format == :graph, do: "is-active", else: "" %>">
+          <%= link "Graaf", to: Routes.project_path(@conn, :index, format: "graph") %>
+        </li>
       </ul>
     </div>
     <%= case @format do
@@ -21,6 +24,8 @@
           render "_table.html", conn: @conn, projects_and_pings: @projects_and_pings
         :avail ->
           render "_avail.html", conn: @conn, projects_and_pings: @projects_and_pings
+        :graph ->
+          render "_graph.html", conn: @conn, projects_and_pings: @projects_and_pings
       end %>
   </div>
 </div>

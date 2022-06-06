@@ -26,6 +26,10 @@ defmodule ZoutWeb.ProjectController do
                 |> Map.new(fn {k, v} -> {k, Enum.reverse(v)} end)
 
               [format: :avail, projects_and_pings: projects_and_pings]
+
+            "graph" ->
+              projects_and_pings = Data.list_projects_and_status()
+              [format: :graph, projects_and_pings: projects_and_pings]
           end
 
         "json" ->
