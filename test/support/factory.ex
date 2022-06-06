@@ -11,6 +11,7 @@ defmodule Zout.Factory do
       checker: :http_ok,
       deleted: false,
       params: %{"url" => "https://zeus.ugent.be"},
+      dependencies: [],
       inserted_at: database_datetime(),
       updated_at: database_datetime()
     }

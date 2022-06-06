@@ -8,6 +8,7 @@ defmodule Zout.Data do
 
   alias Zout.Data.Project
   alias Zout.Data.Ping
+  alias Zout.Data.Dependency
   alias Zout.Checker
 
   @doc """
@@ -24,13 +25,19 @@ defmodule Zout.Data do
 
   Raises if the Project does not exist.
   """
-  def get_project!(id), do: Repo.get!(Project, id)
+  def get_project!(id), do: Repo.get!(Project, id) |> Repo.preload(:dependencies)
 
   @doc """
   Creates a project.
   """
   def create_project(attrs \\ %{}) do
-    change_project(%Project{}, attrs)
+    # Handle dependencies properly.
+    ids = Map.get(attrs, "dependency_ids", [])
+    deps = Repo.all(from p in Project, where: p.id in ^ids)
+
+    attrs = Map.put(attrs, "dependencies", deps)
+
+    change_project(%Project{dependencies: []}, attrs)
     |> Repo.insert()
   end
 
@@ -38,6 +45,12 @@ defmodule Zout.Data do
   Updates a project.
   """
   def update_project(%Project{} = project, attrs) do
+    # Handle dependencies properly.
+    ids = Map.get(attrs, "dependency_ids", [])
+    deps = Repo.all(from p in Project, where: p.id in ^ids)
+
+    attrs = Map.put(attrs, "dependencies", deps)
+
     change_project(project, attrs)
     |> Repo.update()
   end
@@ -164,5 +177,18 @@ defmodule Zout.Data do
       result = check_module.check(project.params)
       handle_check_result(project, result)
     end)
+  end
+
+  @doc """
+  List the dependencies for the given projects.
+  """
+  def list_dependencies(projects) do
+    ids =
+      Enum.map(projects, fn
+        %Project{id: id} -> id
+        %{project: p} -> p.id
+      end)
+
+    Repo.all(from d in Dependency, where: d.from_id in ^ids)
   end
 end

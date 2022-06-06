@@ -13,6 +13,16 @@ defmodule Zout.Data.Project do
     field :params, :map
     field :deleted, :boolean
 
+    many_to_many :dependencies, Zout.Data.Project,
+      join_through: Zout.Data.Dependency,
+      join_keys: [from_id: :id, to_id: :id],
+      on_replace: :delete
+
+    many_to_many :dependants, Zout.Data.Project,
+      join_through: Zout.Data.Dependency,
+      join_keys: [to_id: :id, from_id: :id],
+      on_replace: :delete
+
     timestamps()
   end
 
@@ -30,5 +40,6 @@ defmodule Zout.Data.Project do
     |> unique_constraint(:name)
     |> handle_checker(attrs)
     |> validate_required([:params])
+    |> put_assoc(:dependencies, Map.get(attrs, "dependencies", []))
   end
 end

@@ -9,14 +9,14 @@ defmodule Zout.DataTest do
       normal_project = insert(:project)
       _deleted_project = insert(:project, deleted: true)
 
-      assert Data.list_projects() == [normal_project]
+      assert Data.list_projects() |> Repo.preload(:dependencies) == [normal_project]
     end
 
     test "lists deleted projects when asked" do
       _normal_project = insert(:project)
       deleted_project = insert(:project, deleted: true)
 
-      assert Data.list_projects(true) == [deleted_project]
+      assert Data.list_projects(true) |> Repo.preload(:dependencies) == [deleted_project]
     end
   end
 
@@ -69,7 +69,7 @@ defmodule Zout.DataTest do
       existing_project = insert(:project)
       update_attrs = %{"source" => "bliep not an url"}
       assert {:error, %Ecto.Changeset{}} = Data.update_project(existing_project, update_attrs)
-      new_project = Repo.get!(Project, existing_project.id)
+      new_project = Repo.get!(Project, existing_project.id) |> Repo.preload(:dependencies)
       assert existing_project == new_project
     end
   end

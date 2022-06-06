@@ -25,7 +25,7 @@
         :avail ->
           render "_avail.html", conn: @conn, projects_and_pings: @projects_and_pings
         :graph ->
-          render "_graph.html", conn: @conn, projects_and_pings: @projects_and_pings
+          render "_graph.html", assigns
       end %>
   </div>
 </div>

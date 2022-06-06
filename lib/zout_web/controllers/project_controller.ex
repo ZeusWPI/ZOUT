@@ -29,7 +29,8 @@ defmodule ZoutWeb.ProjectController do
 
             "graph" ->
               projects_and_pings = Data.list_projects_and_status()
-              [format: :graph, projects_and_pings: projects_and_pings]
+              dependencies = Data.list_dependencies(projects_and_pings)
+              [format: :graph, projects_and_pings: projects_and_pings, dependencies: dependencies]
           end
 
         "json" ->
@@ -44,8 +45,9 @@ defmodule ZoutWeb.ProjectController do
     user = Guardian.Plug.current_resource(conn)
     Bodyguard.permit!(Data.Policy, :project_new, user)
 
-    project = Data.change_project(%Project{})
-    render(conn, "new.html", changeset: project)
+    project = Data.change_project(%Project{dependencies: []})
+    projects = Data.list_projects()
+    render(conn, "new.html", changeset: project, projects: projects)
   end
 
   def create(conn, %{"project" => params}) do
@@ -58,9 +60,11 @@ defmodule ZoutWeb.ProjectController do
         |> redirect(to: Routes.project_path(conn, :index))
 
       {:error, changeset} ->
+        projects = Data.list_projects()
+
         conn
         |> put_status(:unprocessable_entity)
-        |> render("new.html", changeset: changeset)
+        |> render("new.html", changeset: changeset, projects: projects)
     end
   end
 
@@ -69,8 +73,9 @@ defmodule ZoutWeb.ProjectController do
     project = Data.get_project!(id)
     Bodyguard.permit!(Data.Policy, :project_edit, user, project)
 
+    projects = Data.list_projects()
     changeset = Data.change_project(project)
-    render(conn, "edit.html", changeset: changeset)
+    render(conn, "edit.html", changeset: changeset, projects: projects)
   end
 
   def update(conn, %{"id" => id, "project" => params}) do
@@ -83,9 +88,11 @@ defmodule ZoutWeb.ProjectController do
         redirect(conn, to: Routes.project_path(conn, :index))
 
       {:error, changeset} ->
+        projects = Data.list_projects()
+
         conn
         |> put_status(:unprocessable_entity)
-        |> render("edit.html", changeset: changeset)
+        |> render("edit.html", changeset: changeset, projects: projects)
     end
   end
 

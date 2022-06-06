@@ -22,17 +22,30 @@
 
   const cy = cytoscape({
     container: document.getElementById('cy'),
+    layout: {
+      name: 'cola',
+      convergenceThreshold: 100, // end layout sooner, may be a bit lower quality
+      animate: false
+    },
     elements: [
       // All nodes.
       <%= for %{project: project, ping: ping, last_ping: pong} <- @projects_and_pings do %>
         {
           data: {
-            id: "<%= EctoFields.Slug.cast(project.name) |> Zout.Utils.bang!() %>",
+            id: "<%= project.id %>",
             name: '<%= javascript_escape(link "#{status_icon(ping)} #{project.name}", to: Routes.project_path(@conn, :show, project)) %>',
-            classes: "<%= ping.status %>",
             color: '<%= status_colour(ping) %>',
             text: '<%= render_status(ping, pong, false) %>',
             textColor: '<%= text_colour(ping) %>',
+          },
+        },
+      <% end %>
+      <%= for %Dependency{from_id: from, to_id: to} <- @dependencies do %>
+        {
+          data: {
+            id: "<%= from %>-<%= to %>",
+            source: "<%= from %>",
+            target: "<%= to %>"
           },
         },
       <% end %>

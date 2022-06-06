@@ -2,7 +2,8 @@
   <div>
     <div class="columns is-multiline is-justify-content-space-between">
       <div class="column is-narrow">
-        <h2 class="subtitle">Algemeen</h2>
+        <h2 class="title is-5">Algemeen</h2>
+        <p class="subtitle is-6">Het project heeft wat <em>metadata</em> nodig.</p>
       </div>
     </div>
     <div class="field">
@@ -31,7 +32,8 @@
   <div>
     <div class="columns is-multiline is-justify-content-space-between">
       <div class="column is-narrow">
-        <h2 class="subtitle">Toestandscontrolemechanisme</h2>
+        <h2 class="title is-5">Toestandscontrolemechanisme</h2>
+        <p class="subtitle is-6">Kies hoe de toestand van het project gecontroleerd moeten worden.</p>
       </div>
     </div>
     <div class="field">
@@ -41,7 +43,6 @@
           <%= select(f, :checker, [:http_ok, :hydra_api], prompt: "Kies", required: true) %>
         </div>
       </div>
-      <p class="help">Kies hoe de toestand gecontroleerd moet worden.</p>
       <%= error_tag(f, :checker) %>
     </div>
 
@@ -65,6 +66,32 @@
       </div>
     </div>
 
+    <hr>
+    <div>
+      <div class="columns is-multiline is-justify-content-space-between">
+        <div class="column is-narrow">
+          <h2 class="title is-5">Afhankelijkheden</h2>
+          <p class="subtitle is-6">
+            Kies van welke projecten dit project afhangt.<br>
+            Een afhankelijk is niet bidirectioneel.<br>
+            Als het andere project op zijn beurt afhangt van dit project, werkt u als volgt.<br>
+            Eerst voegt u eerst dit project toe, waarbij u het andere project als afhankelijkheid opgeeft.<br>
+            Vervolgens bewerkt u dat andere project om dit project aldaar toe te voegen als afhankelijkheid.
+          </p>
+        </div>
+      </div>
+      <div class="field">
+        <%= for project <- @projects do %>
+          <label class="checkbox">
+            <input <%= if dependency?(@changeset.data, project), do: "checked" %> name="project[dependency_ids][]" type="checkbox" value="<%= project.id %>">
+            <%= project.name %>
+          </label>
+          <br>
+        <% end %>
+      </div>
+
+    </div>
+    <hr>
     <div class="mt-3">
       <div class="field">
         <div class="control">

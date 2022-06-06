@@ -6,6 +6,7 @@
   "dependencies": {
     "bulma": "^0.9.4",
     "cytoscape": "^3.21.1",
+    "cytoscape-cola": "^2.5.1",
     "cytoscape-node-html-label": "^1.2.2",
     "d3": "5.9.2",
     "font-awesome": "^4.7.0",

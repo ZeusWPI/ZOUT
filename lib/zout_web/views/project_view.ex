@@ -1,7 +1,9 @@
 defmodule ZoutWeb.ProjectView do
   use ZoutWeb, :view
 
+  alias Zout.Data.Project
   alias Zout.Data.Ping
+  alias Zout.Data.Dependency
   alias Zout.Checker
   alias ZoutWeb.FormatHelpers
 
@@ -117,4 +119,11 @@ defmodule ZoutWeb.ProjectView do
   end
 
   def title(_, _), do: ""
+
+  @doc """
+  Check if the second project is a dependency of the first.
+  """
+  def dependency?(%Project{dependencies: deps} = p, %Project{id: id}) do
+    Enum.any?(deps, fn p -> p.id == id end)
+  end
 end
