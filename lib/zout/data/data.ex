@@ -106,6 +106,7 @@ defmodule Zout.Data do
     Ping
     |> where([p], p.project_id == ^id and p.stamp >= ^ago)
     |> order_by(desc: :stamp)
+    |> limit(10000)
     |> Repo.all()
   end
 
@@ -124,7 +125,7 @@ defmodule Zout.Data do
         """
         SELECT * FROM pings
         WHERE project_id = ? and stamp > ?
-        ORDER BY stamp
+        ORDER BY stamp DESC
         LIMIT 2000
         """,
         p.id,

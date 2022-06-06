@@ -19,7 +19,7 @@
     },
     "category_percentage": "working",
     'data': [
-      <%= for %Ping{status: status, stamp: stamp} <- Enum.reverse(@historical_data) do %>
+      <%= for %Ping{status: status, stamp: stamp} <- @historical_data do %>
         ["<%= Timex.format!(stamp, "{YYYY}-{0M}-{0D} {h24}:{m}:{s}") %>", "<%= status %>"],
       <% end %>
     ]

@@ -23,6 +23,7 @@ defmodule ZoutWeb.ProjectController do
               projects_and_pings =
                 Data.all_recent_pings(months: -1)
                 |> Enum.group_by(fn %{project: p} -> p end, fn %{ping: p} -> p end)
+                |> Map.new(fn {k, v} -> {k, Enum.reverse(v)} end)
 
               [format: :avail, projects_and_pings: projects_and_pings]
           end
@@ -89,7 +90,9 @@ defmodule ZoutWeb.ProjectController do
     project = Data.get_project!(id)
     Bodyguard.permit!(Data.Policy, :project_show, user, project)
 
-    historical_data = Data.recent_pings(project, months: -2)
+    historical_data =
+      Data.recent_pings(project, months: -2)
+      |> Enum.reverse()
 
     render(conn, :show, project: project, historical_data: historical_data)
   end
