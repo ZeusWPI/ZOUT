@@ -9,3 +9,8 @@ defmodule ZoutWeb.FallbackController do
     |> render(:"403")
   end
 end
+
+# Handle view exceptions
+defimpl Plug.Exception, for: Phoenix.Template.UndefinedError do
+  def status(_exception), do: 406
+end
