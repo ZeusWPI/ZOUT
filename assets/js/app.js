@@ -9,12 +9,17 @@ import cytoscape from 'cytoscape';
 import nodeHtmlLabel from "cytoscape-node-html-label";
 import cola from 'cytoscape-cola';
 import elk from 'cytoscape-elk';
+import coseBilkent from 'cytoscape-cose-bilkent';
+import klay from 'cytoscape-klay';
 
 if (typeof cytoscape("core", "nodeHtmlLabel") !== "function") {
   nodeHtmlLabel(cytoscape);
 }
+
+cytoscape.use( klay );
 cytoscape.use(cola);
 cytoscape.use(elk);
+cytoscape.use(coseBilkent);
 
 // If you want to use Phoenix channels, run `mix help phx.gen.channel`
 // to get started and then uncomment the line below.

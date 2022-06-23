@@ -1,10 +1,10 @@
 <style>
   #cy {
     width: 100%;
-    height: 500px;
+    height: 70vh;
   }
   .cyNode {
-    width: 150px;
+    width: 170px;
     height: 70px;
     padding: 5px;
     border-radius: 5px;
@@ -16,7 +16,7 @@
   }
 
 </style>
-<div  class="cytoscape" id="cy">
+<div class="cytoscape" id="cy">
 </div>
 <script type="application/javascript">
 
@@ -27,16 +27,19 @@
     //  convergenceThreshold: 100, // end layout sooner, may be a bit lower quality
     //  animate: false
     //},
+    //layout: {
+    //  name: 'elk',
+    //  elk: {
+    //    algorithm: "layered",
+    //    "elk.spacing.nodeNode": 10,
+    //  },
+    //},
     layout: {
-      name: 'elk',
-      elk: {
-        algorithm: 'stress',
-        "stress.desiredEdgeLength": 200,
-        "elk.spacing.nodeNode": 20,
-        "elk.nodeSize.minimum": "(200,200)",
-        "elk.nodeSize.constraints": ["MINIMUM_SIZE"],
-        //componentLayoutAlgorithm: 'stress',
-      },
+      name: "cose-bilkent",
+      animate: false
+    },
+    layout: {
+      name: "klay",
     },
     elements: [
       // All nodes.
@@ -44,7 +47,7 @@
         {
           data: {
             id: "<%= project.id %>",
-            name: '<%= javascript_escape(link "#{status_icon(ping)} #{project.name}", to: Routes.project_path(@conn, :show, project)) %>',
+            name: '<%= javascript_escape(link "#{project.name}", to: Routes.project_path(@conn, :show, project)) %>',
             color: '<%= status_colour(ping) %>',
             text: '<%= render_status(ping, pong, false) %>',
             textColor: '<%= text_colour(ping) %>',
@@ -67,8 +70,8 @@
         style: {
           shape: 'round-rectangle',
           'background-color': 'white',
-          height: 65,
-          width: 145,
+          height: 70,
+          width: 170,
         }
       },
     ],
