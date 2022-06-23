@@ -24,6 +24,9 @@ defmodule ZoutWeb.Router do
     get "/", PageController, :index
     resources "/projects", ProjectController
 
+    get "/import", ImportController, :index
+    post "/import", ImportController, :import
+
     scope "/auth" do
       get "/:provider/callback", AuthController, :callback
       get "/:provider", AuthController, :request

@@ -67,6 +67,7 @@ defmodule Zout.MixProject do
       {:ex_cldr, "~> 2.29"},
       {:ex_cldr_dates_times, "~> 2.0"},
       {:timex, "~> 3.0"},
+      {:dotx, "~> 0.3"},
       {:ex_machina, "~> 2.7", only: :test},
       {:excoveralls, "~> 0.10", only: :test}
     ]

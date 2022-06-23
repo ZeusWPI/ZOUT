@@ -23,6 +23,10 @@
       <div class="navbar-end">
         <%= link "Overzicht", to: Routes.project_path(@conn, :index), class: "navbar-item" %>
 
+        <%= if true do %>
+          <%= link "Import", to: Routes.import_path(@conn, :index), class: "navbar-item" %>
+        <% end %>
+
         <!-- User -->
         <% user = Guardian.Plug.current_resource(@conn) %>
         <%= if is_nil(user) do %>

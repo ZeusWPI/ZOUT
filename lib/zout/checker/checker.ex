@@ -8,6 +8,7 @@ defmodule Zout.Checker do
   """
   def checker(:http_ok), do: Zout.Checker.HttpOk
   def checker(:hydra_api), do: Zout.Checker.HydraApi
+  def checker(:unchecked), do: Zout.Checker.Unchecked
 
   @doc """
   Get the identifier for this checker.

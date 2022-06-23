@@ -25,7 +25,18 @@ defmodule Zout.Data do
 
   Raises if the Project does not exist.
   """
-  def get_project!(id), do: Repo.get!(Project, id) |> Repo.preload(:dependencies)
+  def get_project!(id) do
+    Repo.get!(Project, id)
+    |> Repo.preload(:dependencies)
+  end
+
+  @doc """
+  Gets a single project by slug.
+
+  Raises if the Project does not exist.
+  """
+  def get_project_by_slug(slug),
+    do: Repo.get_by(Project, slug: slug) |> Repo.preload(:dependencies)
 
   @doc """
   Creates a project.
@@ -190,5 +201,66 @@ defmodule Zout.Data do
       end)
 
     Repo.all(from d in Dependency, where: d.from_id in ^ids)
+  end
+
+  @doc """
+  Import stuff based on the given graph.
+
+  This function expects a valid `Dotx.graph/0`.
+
+  It returns a list of created projects.
+  """
+  @spec import(Dotx.graph()) :: []
+  def import(graph) do
+    {nodes, graphs} = Dotx.to_nodes(graph)
+
+    # Run this whole thing in a transaction.
+    Repo.transaction(fn ->
+      # Insert or find all projects, in a map of slug -> project.
+      project_map =
+        Map.new(nodes, fn {[id | _], node} ->
+          # Check if we can find an existing node.
+          {:ok, slug} = EctoFields.Slug.cast(id)
+
+          project =
+            case get_project_by_slug(id) do
+              nil ->
+                case create_project(%{"name" => id, "checker" => "unchecked", "params" => %{}}) do
+                  {:ok, project} -> project
+                  {:error, error} -> Repo.rollback(error)
+                end
+
+              project ->
+                project
+            end
+
+          {id, project}
+        end)
+
+      all_ids_in_file = Enum.map(project_map, fn {_, %Project{id: id}} -> id end)
+
+      # Insert all dependencies.
+      Enum.each(nodes, fn {[id | _], node = %Dotx.Node{attrs: %{"edges_from" => edges}}} ->
+        this_project = Map.get(project_map, id)
+
+        dependencies =
+          Enum.map(edges, fn %Dotx.Edge{to: %Dotx.Node{id: [to_id | _]}} ->
+            Map.get(project_map, to_id)
+          end)
+
+        original_dependencies = this_project.dependencies
+
+        # We also want to keep all dependencies that map to a node not in this file.
+        deps_not_in_file =
+          Enum.filter(original_dependencies, fn original_dep ->
+            original_dep.id in all_ids_in_file
+          end)
+
+        dependencies = dependencies ++ deps_not_in_file
+
+        change_project(this_project, %{"dependencies" => dependencies})
+        |> Repo.update!()
+      end)
+    end)
   end
 end

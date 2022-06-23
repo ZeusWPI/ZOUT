@@ -1,0 +1,54 @@
+<h1 class="title">
+  Projectstructuur importeren
+</h1>
+<p class="subtitle">
+  Als alternatief voor het manueel aanmaken van projecten en manueel de afhankelijkheden aan te duiden, kunt u hier
+  een <a href="https://graphviz.org/doc/info/lang.html">DOT</a>-bestand uploaden.
+</p>
+<div class="content">
+  <h3>Hoe werkt het?</h3>
+  <p>
+    De import werkt als volgt: voor elke top in de DOT-graaf wordt een overeenkomstig
+    project gezocht.
+    Hiervoor wordt de naam of het id van de top gebruikt.
+    Desgevallend wordt een nieuw project aangemaakt, waarbij u een waarschuwing krijgt.
+    Deze waarschuwing kan u helpen om na te gaan of er niet onterecht projecten zijn aangemaakt.
+    Projecten in deze applicatie waarvoor geen top bestaat worden niet verwijderd.
+    Dit maakt het mogelijk om een gedeeltelijke import te doen.
+  </p>
+  <p>
+    Vervolgens worden alle bogen geïnterpreteerd als een afhankelijkheid.
+    Enkel gerichte bogen worden in overweging genomen.
+    Dubbele afhankelijkheden worden samengevoegd en slechts éénmaal toegevoegd.
+    De afhankelijkheden tussen twee projecten met overeenkomstige toppen worden
+    in overeenstemming met de import gebracht.
+    Bevat het bestand toppen A en B, zonder boog ertussen, maar bevat deze applicatie
+    wel een afhankelijkheid van A op B, zal deze afhankelijkheid verwijderd worden.
+    Bevat de applicatie een afhankelijkheid van of naar een project waarvoor geen
+    top bestaat, zal deze ongewijzigd blijven.
+  </p>
+</div>
+<div class="card">
+  <div class="card-content">
+    <%= form_for @conn, Routes.import_path(@conn, :import), [as: :import], fn f -> %>
+      <div>
+        <div class="field">
+          <%= label(f, :contents, "Inhoud DOT-bestand*", class: "label") %>
+          <div class="control">
+            <%= textarea(f, :contents, required: true, class: input_class(f, :contents, "textarea")) %>
+          </div>
+          <%= error_tag(f, :contents) %>
+        </div>
+      </div>
+      <div class="mt-3">
+        <div class="field">
+          <div class="control">
+            <div class="is-flex is-justify-content-flex-end">
+              <%= submit "Importeren", class: "button is-primary" %>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

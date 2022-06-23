@@ -7,9 +7,10 @@ defmodule Zout.Data.Project do
 
   schema "projects" do
     field :name, :string
+    field :slug, EctoFields.Slug
     field :source, EctoFields.URL
     field :home, EctoFields.URL
-    field :checker, Ecto.Enum, values: [:http_ok, :hydra_api]
+    field :checker, Ecto.Enum, values: [:http_ok, :hydra_api, :unchecked]
     field :params, :map
     field :deleted, :boolean
 
@@ -34,10 +35,18 @@ defmodule Zout.Data.Project do
   end
 
   def changeset(project, attrs \\ %{}) do
+    attrs =
+      if Map.has_key?(attrs, "name") do
+        Map.put(attrs, "slug", Map.get(attrs, "name"))
+      else
+        attrs
+      end
+
     project
-    |> cast(attrs, [:name, :source, :home, :checker])
-    |> validate_required([:name, :checker])
+    |> cast(attrs, [:name, :source, :home, :checker, :slug])
+    |> validate_required([:name, :checker, :slug])
     |> unique_constraint(:name)
+    |> unique_constraint(:slug)
     |> handle_checker(attrs)
     |> validate_required([:params])
     |> put_assoc(:dependencies, Map.get(attrs, "dependencies", []))

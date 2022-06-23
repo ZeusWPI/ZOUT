@@ -1,6 +1,10 @@
 /* This file is for your main application CSS */
 @import "./tap.scss";
 
+p {
+  max-width: 700px;
+}
+
 @import "visavail/visavail.css";
 // Override some visavail font choices...
 .visavail-tooltip div.tooltip-top,

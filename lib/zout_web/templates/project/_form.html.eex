@@ -40,7 +40,7 @@
       <%= label(f, :home, "Webpagina", class: "label") %>
       <div class="control">
         <div class="<%= input_class(f, :checker, "select") %>">
-          <%= select(f, :checker, [:http_ok, :hydra_api], prompt: "Kies", required: true) %>
+          <%= select(f, :checker, [:http_ok, :hydra_api, :unchecked], prompt: "Kies", required: true) %>
         </div>
       </div>
       <%= error_tag(f, :checker) %>
@@ -53,6 +53,9 @@
       </div>
       <div class="checker-help" data-for-checker="hydra_api" style="display: none">
         <%= raw render_help_for(:hydra_api) %>
+      </div>
+      <div class="checker-help" data-for-checker="unchecked" style="display: none">
+        <%= raw render_help_for(:unchecked) %>
       </div>
     </div>
 
