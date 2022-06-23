@@ -22,10 +22,21 @@
 
   const cy = cytoscape({
     container: document.getElementById('cy'),
+    //layout: {
+    //  name: 'cola',
+    //  convergenceThreshold: 100, // end layout sooner, may be a bit lower quality
+    //  animate: false
+    //},
     layout: {
-      name: 'cola',
-      convergenceThreshold: 100, // end layout sooner, may be a bit lower quality
-      animate: false
+      name: 'elk',
+      elk: {
+        algorithm: 'stress',
+        "stress.desiredEdgeLength": 200,
+        "elk.spacing.nodeNode": 20,
+        "elk.nodeSize.minimum": "(200,200)",
+        "elk.nodeSize.constraints": ["MINIMUM_SIZE"],
+        //componentLayoutAlgorithm: 'stress',
+      },
     },
     elements: [
       // All nodes.
