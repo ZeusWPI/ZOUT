@@ -35,7 +35,12 @@ defmodule ZoutWeb.ProjectController do
 
         "json" ->
           projects_and_pings = Data.list_projects_and_status()
-          [projects_and_pings: projects_and_pings]
+
+          dependencies =
+            Data.list_dependencies(projects_and_pings)
+            |> Enum.group_by(fn dep -> dep.from_id end, fn dep -> dep.to_id end)
+
+          [projects_and_pings: projects_and_pings, dependencies: dependencies]
       end
 
     render(conn, :index, params)

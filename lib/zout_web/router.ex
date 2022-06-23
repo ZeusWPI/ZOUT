@@ -2,7 +2,7 @@ defmodule ZoutWeb.Router do
   use ZoutWeb, :router
 
   pipeline :browser do
-    plug :accepts, ["html"]
+    plug :accepts, ["html", "json"]
     plug :fetch_session
     plug :fetch_live_flash
     plug :put_root_layout, {ZoutWeb.LayoutView, :root}
@@ -18,19 +18,11 @@ defmodule ZoutWeb.Router do
     plug :accepts, ["html", "json"]
   end
 
-  # Pages for which JSON is available
-  scope "/", ZoutWeb do
-    pipe_through [:browser, :auth, :api]
-
-    get "/projects", ProjectController, :index
-  end
-
-  # Non-JSON pages.
   scope "/", ZoutWeb do
     pipe_through [:browser, :auth]
 
     get "/", PageController, :index
-    resources "/projects", ProjectController, except: [:index]
+    resources "/projects", ProjectController
 
     scope "/auth" do
       get "/:provider/callback", AuthController, :callback

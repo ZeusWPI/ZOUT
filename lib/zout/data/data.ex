@@ -74,8 +74,8 @@ defmodule Zout.Data do
 
   The returned list will contain each active project, with:
 
-  - The latest ping to display the current status.
-  - The lastet ping with a different status.
+  - The latest ping to display the current status (`ping`).
+  - The lastet ping with a different status (`last_ping`).
 
   Note that this last one cheats a bit: to be exact, we would want the earliest
   ping in the previous sequence of pings with a different status (the pings in

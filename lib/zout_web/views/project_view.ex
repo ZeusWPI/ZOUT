@@ -50,15 +50,13 @@ defmodule ZoutWeb.ProjectView do
     "#{prefix}offline sinds #{FormatHelpers.human_datetime(start)} (#{days} dagen)"
   end
 
-  def render_last_checked(data) do
-    now = Timex.now()
-
+  def last_checked(data) do
     Enum.map(data, fn
       %{ping: %Ping{stamp: s}} -> s
-      _ -> now
+      _ -> nil
     end)
-    |> Enum.max(NaiveDateTime)
-    |> FormatHelpers.human_datetime()
+    |> Enum.reject(&is_nil/1)
+    |> Enum.max(NaiveDateTime, fn -> Timex.now() end)
   end
 
   def render_help_for(checker) do
@@ -77,23 +75,30 @@ defmodule ZoutWeb.ProjectView do
     Map.get(params, actual_field)
   end
 
-  defp json_status(nil), do: "working"
+  defp json_status(nil), do: nil
   defp json_status(%Ping{status: status}), do: status
 
-  def render("index.json", %{projects: projects}) do
+  defp json_last_ping(nil), do: nil
+  defp json_last_ping(%{stamp: nil}), do: nil
+  defp json_last_ping(%{stamp: s}), do: NaiveDateTime.to_iso8601(s)
+
+  def render("index.json", %{projects_and_pings: projects, dependencies: dependencies}) do
+    last_check = last_checked(projects)
+
     %{
       projects:
-        Enum.map(projects, fn %{project: p, ping: c} ->
+        Enum.map(projects, fn %{project: p, ping: c, last_ping: d} ->
           %{
             id: p.id,
             name: p.name,
             source: p.source,
             home: p.home,
             status: json_status(c),
-            since: "TODO"
+            since: json_last_ping(d),
+            dependencies: Map.get(dependencies, p.id, [])
           }
         end),
-      lastCheck: "TODO"
+      lastCheck: NaiveDateTime.to_iso8601(last_check)
     }
   end
 
@@ -123,7 +128,7 @@ defmodule ZoutWeb.ProjectView do
   @doc """
   Check if the second project is a dependency of the first.
   """
-  def dependency?(%Project{dependencies: deps} = p, %Project{id: id}) do
+  def dependency?(%Project{dependencies: deps}, %Project{id: id}) do
     Enum.any?(deps, fn p -> p.id == id end)
   end
 end
