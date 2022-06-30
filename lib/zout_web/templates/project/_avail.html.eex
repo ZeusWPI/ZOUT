@@ -11,6 +11,7 @@
           'working': { class: 'rect_working', tooltip_html: '🟢 working • ' },
           'failing': { class: 'rect_failing', tooltip_html: '🟠 failing • ' },
           'offline': { class: 'rect_offline', tooltip_html: '🔴 offline • ' },
+          'unchecked': { class: 'rect_unchecked', tooltip_html: '⚪ unchecked • ' },
         },
         'category_percentage': 'working',
         'data': [

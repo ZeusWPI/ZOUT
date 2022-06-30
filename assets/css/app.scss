@@ -41,6 +41,13 @@ p {
   }
 }
 
+.rect_unchecked {
+  fill: darkgray;
+  &:hover {
+    fill: grey;
+  }
+}
+
 /* Alerts and form errors used by phx.new */
 .alert {
   padding: 15px;

@@ -7,6 +7,13 @@ defmodule ZoutWeb.ProjectView do
   alias Zout.Checker
   alias ZoutWeb.FormatHelpers
 
+  def number_of_days(nil) do
+    now = DateTime.utc_now()
+
+    Timex.Interval.new(from: now, until: [minutes: 1])
+    |> Timex.Interval.duration(:days)
+  end
+
   def number_of_days(since) do
     now = DateTime.utc_now()
 
@@ -18,25 +25,34 @@ defmodule ZoutWeb.ProjectView do
   def status_colour(%Ping{status: :working}), do: "#2e7d32"
   def status_colour(%Ping{status: :failing}), do: "#ff8f00"
   def status_colour(%Ping{status: :offline}), do: "#c62828"
+  def status_colour(%Ping{status: :unchecked}), do: "#d3d3d3"
 
   def text_colour(nil), do: "white"
   def text_colour(%Ping{status: :working}), do: "white"
   def text_colour(%Ping{status: :failing}), do: "black"
   def text_colour(%Ping{status: :offline}), do: "white"
+  def text_colour(%Ping{status: :unchecked}), do: "black"
 
-  def status_icon(nil), do: "🟢"
+  def status_icon(nil), do: "⚪"
   def status_icon(%Ping{status: :working}), do: "🟢"
   def status_icon(%Ping{status: :failing}), do: "🟠"
   def status_icon(%Ping{status: :offline}), do: "🔴"
+  def status_icon(%Ping{status: :unchecked}), do: "⚪"
 
   def render_status(_, _, icon \\ true)
 
   def render_status(nil, _, icon) do
     prefix = if icon, do: "#{status_icon(nil)} ", else: ""
-    "#{prefix}working"
+    "#{prefix}niet gecontroleerd"
   end
 
-  def render_status(%Ping{status: :working}, _, icon), do: render_status(nil, nil, icon)
+  def render_status(%Ping{status: :unchecked}, a, icon), do: render_status(nil, a, icon)
+
+  def render_status(%Ping{status: :working} = p, %{stamp: start}, icon) do
+    prefix = if icon, do: "#{status_icon(p)} ", else: ""
+    days = number_of_days(start)
+    "#{prefix}working sinds #{FormatHelpers.human_datetime(start)} (#{days} dagen)"
+  end
 
   def render_status(%Ping{status: :failing} = p, %{stamp: start}, icon) do
     prefix = if icon, do: "#{status_icon(p)} ", else: ""

@@ -1,7 +1,7 @@
 <style>
   #cy {
     width: 100%;
-    height: 70vh;
+    height: 80vh;
   }
   .cyNode {
     width: 170px;
@@ -27,20 +27,20 @@
     //  convergenceThreshold: 100, // end layout sooner, may be a bit lower quality
     //  animate: false
     //},
+    layout: {
+      name: 'elk',
+      elk: {
+        algorithm: "layered",
+        "elk.spacing.nodeNode": 10,
+      },
+    },
     //layout: {
-    //  name: 'elk',
-    //  elk: {
-    //    algorithm: "layered",
-    //    "elk.spacing.nodeNode": 10,
-    //  },
+      //  name: "cose-bilkent",
+      //  animate: false
     //},
-    layout: {
-      name: "cose-bilkent",
-      animate: false
-    },
-    layout: {
-      name: "klay",
-    },
+      //layout: {
+      //  name: "klay",
+    //},
     elements: [
       // All nodes.
       <%= for %{project: project, ping: ping, last_ping: pong} <- @projects_and_pings do %>

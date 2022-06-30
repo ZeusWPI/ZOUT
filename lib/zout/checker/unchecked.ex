@@ -11,7 +11,7 @@ defmodule Zout.Checker.Unchecked do
 
   @impl true
   def check(params) do
-    {:working, nil, nil}
+    {:unchecked, nil, nil}
   end
 
   @impl true
