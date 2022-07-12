@@ -31,6 +31,7 @@
               (pkgs.postgresql_14.withPackages (p: [ p.timescaledb ]))
               pkgs.inotify-tools
               pkgs.nodejs-16_x
+              pkgs.docker-compose
             ];
             env = [
               {

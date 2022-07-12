@@ -1,0 +1,33 @@
+version: '3.5'
+
+services:
+  zout:
+    build:
+      context: .
+      dockerfile: ./server.dockerfile
+    ports:
+      - "40004:4000"
+    restart: on-failure
+    environment:
+      DATABASE_URL: ecto://zout:zout@database/zout
+    env_file:
+      - .env
+    depends_on:
+      - database
+
+  database:
+    image: timescale/timescaledb:latest-pg14
+    restart: on-failure
+    environment:
+      POSTGRES_USER: zout
+      POSTGRES_PASSWORD: zout
+    volumes:
+      - zout-database:/var/lib/postgresql/data
+    healthcheck:
+      test: "pg_isready -U zout"
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  zout-database:

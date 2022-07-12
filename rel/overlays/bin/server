@@ -1,0 +1,8 @@
+#!/bin/sh
+cd -P -- "$(dirname -- "$0")"
+
+# Migrate application
+./zout eval Zout.Release.migrate
+
+# Run application
+PHX_SERVER=true exec ./zout start
