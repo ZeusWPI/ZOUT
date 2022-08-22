@@ -30,7 +30,13 @@ Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
 Note that once the server runs, it will ping registered services every minute or so,
 so don't leave it running too long in the background.
 
-Ready to run in production? Please [check our deployment guides](https://hexdocs.pm/phoenix/deployment.html).
+## Deployment
+
+1. SSH to the server
+2. Pull the repo
+3. Take the application down with `podman-compose down`.
+4. Build a new docker image with `podman-compose build`
+5. Start the application with `podman-compose up -d`
 
 ## Learn more
 
