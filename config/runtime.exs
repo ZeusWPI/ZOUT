@@ -80,4 +80,8 @@ if config_env() == :prod do
   #     config :swoosh, :api_client, Swoosh.ApiClient.Hackney
   #
   # See https://hexdocs.pm/swoosh/Swoosh.html#module-installation for details.
+
+  config :ueberauth, ZoutWeb.Auth.OAuthStrategy,
+    client_id: "ZOUT",
+    client_secret: System.get_env("OAUTH_CLIENT_SECRET")
 end
