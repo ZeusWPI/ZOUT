@@ -47,3 +47,6 @@ config :logger, level: :info
 #       force_ssl: [hsts: true]
 #
 # Check `Plug.SSL` for all available options in `force_ssl`.
+config :ueberauth, ZoutWeb.Auth.OAuthStrategy,
+  client_id: "🆉🅾🆄🆃",
+  client_secret: System.get_env("OAUTH_CLIENT_SECRET")
