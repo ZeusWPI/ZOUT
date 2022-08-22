@@ -16,31 +16,54 @@
   }
 
 </style>
+<%= select(:engine, :engine, ["cola", "elk", "cose-bilkent", "klay"], selected: @engine) %>
 <div class="cytoscape" id="cy">
 </div>
 <script type="application/javascript">
 
+  document.getElementById("<%= input_id(:engine, :engine) %>")
+  .addEventListener('change',(e) => {
+    const selectElement = e.target;
+    const engine = selectElement.value;
+    const searchParams = new URLSearchParams(window.location.search);
+    searchParams.set("engine", engine);
+    window.location.search = searchParams.toString();
+  });
+
+  let algorithm;
+  switch ("<%= @engine %>") {
+    case "cola":
+      algorithm = {
+        name: 'cola',
+        convergenceThreshold: 100, // end layout sooner, may be a bit lower quality
+        animate: false
+      };
+      break;
+    case "elk":
+      algorithm = {
+        name: 'elk',
+        elk: {
+          algorithm: "layered",
+          "elk.spacing.nodeNode": 10,
+        },
+      };
+      break;
+    case "cose-bilkent":
+      algorithm = {
+        name: "cose-bilkent",
+        animate: false
+      };
+      break;
+    case "klay":
+      algorithm = {
+        name: "klay"
+      }
+      break;
+  }
+
   const cy = cytoscape({
     container: document.getElementById('cy'),
-    //layout: {
-    //  name: 'cola',
-    //  convergenceThreshold: 100, // end layout sooner, may be a bit lower quality
-    //  animate: false
-    //},
-    layout: {
-      name: 'elk',
-      elk: {
-        algorithm: "layered",
-        "elk.spacing.nodeNode": 10,
-      },
-    },
-    //layout: {
-      //  name: "cose-bilkent",
-      //  animate: false
-    //},
-      //layout: {
-      //  name: "klay",
-    //},
+    layout: algorithm,
     elements: [
       // All nodes.
       <%= for %{project: project, ping: ping, last_ping: pong} <- @projects_and_pings do %>

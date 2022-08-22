@@ -28,9 +28,16 @@ defmodule ZoutWeb.ProjectController do
               [format: :avail, projects_and_pings: projects_and_pings]
 
             "graph" ->
+              engine = Map.get(params, "engine", "elk")
               projects_and_pings = Data.list_projects_and_status()
               dependencies = Data.list_dependencies(projects_and_pings)
-              [format: :graph, projects_and_pings: projects_and_pings, dependencies: dependencies]
+
+              [
+                format: :graph,
+                projects_and_pings: projects_and_pings,
+                dependencies: dependencies,
+                engine: engine
+              ]
           end
 
         "json" ->
