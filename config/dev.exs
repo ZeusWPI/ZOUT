@@ -82,4 +82,5 @@ config :zout, ZoutWeb.Auth.Guardian,
 # Use the test client in dev mode.
 config :ueberauth, ZoutWeb.Auth.OAuthStrategy,
   client_id: "tomtest",
-  client_secret: "blargh"
+  client_secret: "blargh",
+  redirect_uri: "http://localhost:4000/auth/zeus/callback"
