@@ -47,7 +47,6 @@ defmodule ZoutWeb.AuthController do
       end
 
     Guardian.Plug.sign_in(conn, user)
-    |> IO.inspect()
     |> delete_session(:after_login_redirect)
     |> redirect(to: redirect_url)
   end
@@ -59,7 +58,9 @@ defmodule ZoutWeb.AuthController do
   end
 
   @impl true
-  def auth_error(conn, {:unauthenticated, _reason}, _opts) do
+  def auth_error(conn, {:unauthenticated, reason}, _opts) do
+    IO.inspect("Unauthenticated due to")
+    IO.inspect(reason)
     redirect(conn, to: Routes.auth_path(conn, :request, :zeus, %{from: current_path(conn)}))
   end
 

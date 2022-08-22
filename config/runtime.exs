@@ -84,4 +84,9 @@ if config_env() == :prod do
   config :ueberauth, ZoutWeb.Auth.OAuthStrategy,
     client_id: "ZOUT",
     client_secret: System.get_env("OAUTH_CLIENT_SECRET")
+
+  # Guardian token for cookies
+  config :zout, ZoutWeb.Auth.Guardian,
+    issuer: "zout",
+    secret_key: secret_key_base
 end
