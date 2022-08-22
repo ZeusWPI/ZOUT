@@ -6,7 +6,7 @@ services:
       context: .
       dockerfile: ./server.dockerfile
     ports:
-      - "40004:4000"
+      - "50505:4000"
     restart: on-failure
     environment:
       DATABASE_URL: ecto://zout:zout@database/zout
