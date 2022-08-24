@@ -136,6 +136,8 @@ defmodule Zout.Data do
 
   @doc """
   Get recent pings for all projects.
+
+  This will not include projects that only have "unchecked" pings.
   TODO: how does this perform with a lot of pings? Who knows.
   """
   def all_recent_pings(duration) do
@@ -148,7 +150,7 @@ defmodule Zout.Data do
       pi in fragment(
         """
         SELECT * FROM pings
-        WHERE project_id = ? and stamp > ?
+        WHERE project_id = ? and stamp > ? and status != 'unchecked'
         ORDER BY stamp DESC
         LIMIT 2000
         """,
