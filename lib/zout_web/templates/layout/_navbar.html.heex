@@ -21,14 +21,14 @@
       </div>
 
       <div class="navbar-end">
+        <% user = Guardian.Plug.current_resource(@conn) %>
         <%= link "Overzicht", to: Routes.project_path(@conn, :index), class: "navbar-item" %>
 
-        <%= if true do %>
+        <%= if Bodyguard.permit?(Data.Policy, :project_import, user) do %>
           <%= link "Import", to: Routes.import_path(@conn, :index), class: "navbar-item" %>
         <% end %>
 
         <!-- User -->
-        <% user = Guardian.Plug.current_resource(@conn) %>
         <%= if is_nil(user) do %>
           <%= link "Aanmelden met Zeus", to: Routes.auth_path(@conn, :request, :zeus), class: "navbar-item" %>
         <% else %>
