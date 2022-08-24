@@ -81,6 +81,25 @@
                   psql --host $PGDATA -U postgres
                 '';
               }
+              {
+                name = "link";
+                category = "editor";
+                help = "Create shortcuts for Intellij SDK";
+                command = ''
+                  mkdir -p "$PWD/tmp/current"
+                  ln -sfn ${pkgs.erlang} "$PWD/tmp/current/erlang"
+                  ln -sfn ${pkgs.elixir} "$PWD/tmp/current/elixir"
+                '';
+              }
+              {
+                name = "idea";
+                category = "editor";
+                help = "Start Intellij Ultimate (system) in this project";
+                command = ''
+                  link
+                  idea-ultimate . >/dev/null 2>&1 &
+                '';
+              }
             ];
           };
         };
