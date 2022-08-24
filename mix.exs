@@ -17,6 +17,11 @@ defmodule Zout.MixProject do
         "coveralls.detail": :test,
         "coveralls.post": :test,
         "coveralls.html": :test
+      ],
+      releases: [
+        zout: [
+          strip_beams: [keep: ["Docs"]]
+        ]
       ]
     ]
   end
