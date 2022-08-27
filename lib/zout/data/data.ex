@@ -117,6 +117,7 @@ defmodule Zout.Data do
       on: p.id == d.project_id
     )
     |> select([p, c, d], %{project: p, ping: c, last_ping: %{stamp: d.stamp, status: d.status}})
+    |> order_by([p, c, d], [c.status == ^"unchecked", p.name])
     |> Repo.all()
   end
 
