@@ -5,8 +5,22 @@
   <% end %>
 </h1>
 <div class="subtitle">
-  TODO
-  Hier komen ooit dingen zoals de beschrijving
+  Hier steken we ooit een TODO...
+  <ul style="padding-top: 1em">
+    <%= unless is_nil(@project.home) do %>
+      <li>
+        <span class="icon"><i class="fa fa-home"></i></span>
+        <%= link "Projectwebsite", to: @project.home %>
+      </li>
+    <% end %>
+    <%= unless is_nil(@project.source) do %>
+      <li>
+        <span class="icon"><i class="fa fa-code"></i></span>
+        <%= link "Broncode", to: @project.home %>
+      </li>
+    <% end %>
+  </ul>
+
 </div>
 <div class="card">
   <div class="card-content">
