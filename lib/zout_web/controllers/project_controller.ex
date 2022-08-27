@@ -96,8 +96,8 @@ defmodule ZoutWeb.ProjectController do
     Bodyguard.permit!(Data.Policy, :project_update, user, project)
 
     case Data.update_project(project, params) do
-      {:ok, _project} ->
-        redirect(conn, to: Routes.project_path(conn, :index))
+      {:ok, project} ->
+        redirect(conn, to: Routes.project_path(conn, :show, project))
 
       {:error, changeset} ->
         projects = Data.list_projects()
