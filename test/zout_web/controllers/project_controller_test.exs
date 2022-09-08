@@ -121,7 +121,7 @@ defmodule ZoutWeb.ProjectControllerTest do
       conn = login(conn, insert(:admin))
       conn = patch(conn, Routes.project_path(conn, :update, project), project: valid_attrs)
 
-      assert redirected_to(conn) == Routes.project_path(conn, :index)
+      assert redirected_to(conn) == Routes.project_path(conn, :show, project)
     end
 
     test "renders errors when data is invalid", %{conn: conn} do

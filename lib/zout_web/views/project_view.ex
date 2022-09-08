@@ -39,28 +39,28 @@ defmodule ZoutWeb.ProjectView do
   def status_icon(%Ping{status: :offline}), do: "🔴"
   def status_icon(%Ping{status: :unchecked}), do: "⚪"
 
-  def render_status(_, _, icon \\ true)
+  def render_status(_, icon \\ true)
 
-  def render_status(nil, _, icon) do
+  def render_status(nil, icon) do
     prefix = if icon, do: "#{status_icon(nil)} ", else: ""
     "#{prefix}niet gecontroleerd"
   end
 
-  def render_status(%Ping{status: :unchecked}, a, icon), do: render_status(nil, a, icon)
+  def render_status(%Ping{status: :unchecked}, icon), do: render_status(nil, icon)
 
-  def render_status(%Ping{status: :working} = p, %{stamp: start}, icon) do
+  def render_status(%Ping{status: :working, start: start} = p, icon) do
     prefix = if icon, do: "#{status_icon(p)} ", else: ""
     days = number_of_days(start)
     "#{prefix}working sinds #{FormatHelpers.human_datetime(start)} (#{days} dagen)"
   end
 
-  def render_status(%Ping{status: :failing} = p, %{stamp: start}, icon) do
+  def render_status(%Ping{status: :failing, start: start} = p, icon) do
     prefix = if icon, do: "#{status_icon(p)} ", else: ""
     days = number_of_days(start)
     "#{prefix}failing sinds #{FormatHelpers.human_datetime(start)} (#{days} dagen)"
   end
 
-  def render_status(%Ping{status: :offline} = p, %{stamp: start}, icon) do
+  def render_status(%Ping{status: :offline, start: start} = p, icon) do
     prefix = if icon, do: "#{status_icon(p)} ", else: ""
     days = number_of_days(start)
     "#{prefix}offline sinds #{FormatHelpers.human_datetime(start)} (#{days} dagen)"
@@ -68,7 +68,7 @@ defmodule ZoutWeb.ProjectView do
 
   def last_checked(data) do
     Enum.map(data, fn
-      %{ping: %Ping{stamp: s}} -> s
+      %{ping: %Ping{start: s}} -> s
       _ -> nil
     end)
     |> Enum.reject(&is_nil/1)
@@ -94,23 +94,28 @@ defmodule ZoutWeb.ProjectView do
   defp json_status(nil), do: nil
   defp json_status(%Ping{status: status}), do: status
 
-  defp json_last_ping(nil), do: nil
-  defp json_last_ping(%{stamp: nil}), do: nil
-  defp json_last_ping(%{stamp: s}), do: NaiveDateTime.to_iso8601(s)
+  defp json_start_ping(nil), do: nil
+  defp json_start_ping(%{start: nil}), do: nil
+  defp json_start_ping(%{start: s}), do: NaiveDateTime.to_iso8601(s)
+
+  defp json_stop_ping(nil), do: nil
+  defp json_stop_ping(%{stop: nil}), do: nil
+  defp json_stop_ping(%{stop: s}), do: NaiveDateTime.to_iso8601(s)
 
   def render("index.json", %{projects_and_pings: projects, dependencies: dependencies}) do
     last_check = last_checked(projects)
 
     %{
       projects:
-        Enum.map(projects, fn %{project: p, ping: c, last_ping: d} ->
+        Enum.map(projects, fn %{project: p, ping: c} ->
           %{
             id: p.id,
             name: p.name,
             source: p.source,
             home: p.home,
             status: json_status(c),
-            since: json_last_ping(d),
+            start: json_start_ping(c),
+            stop: json_stop_ping(c),
             dependencies: Map.get(dependencies, p.id, [])
           }
         end),

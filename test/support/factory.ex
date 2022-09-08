@@ -20,7 +20,8 @@ defmodule Zout.Factory do
 
   def ping_factory do
     %Zout.Data.Ping{
-      stamp: database_datetime(),
+      start: database_datetime(),
+      stop: database_datetime(),
       project: build(:project),
       status: :failing
     }

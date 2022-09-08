@@ -15,8 +15,8 @@
         },
         'category_percentage': 'working',
         'data': [
-          <%= for %{status: status, stamp: stamp} <- pings do %>
-            ["<%= Timex.format!(stamp, "{YYYY}-{0M}-{0D} {h24}:{m}:{s}") %>", "<%= status %>"],
+          <%= for %Ping{status: status, start: start, stop: stop} <- pings do %>
+            ["<%= Timex.format!(start, "{YYYY}-{0M}-{0D} {h24}:{m}:{s}") %>", "<%= status %>", "<%= Timex.format!(stop, "{YYYY}-{0M}-{0D} {h24}:{m}:{s}") %>"],
           <% end %>
         ]
       },

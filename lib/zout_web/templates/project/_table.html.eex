@@ -7,10 +7,10 @@
   </tr>
   </thead>
   <tbody>
-  <%= for %{ project: project, ping: ping, last_ping: last_ping } <- @projects_and_pings do %>
+  <%= for %{ project: project, ping: ping } <- @projects_and_pings do %>
     <tr>
       <td class="order-item-info"><%= link project.name, to: Routes.project_path(@conn, :show, project) %></td>
-      <td><%= render_status(ping, last_ping) %></td>
+      <td><%= render_status(ping) %></td>
       <td>
         <%= if can?(@conn, :project_edit, project) do %>
           <%= link "Bewerken", to: Routes.project_path(@conn, :edit, project) %>
