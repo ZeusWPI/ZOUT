@@ -114,9 +114,8 @@ defmodule Zout.Data do
 
     Ping
     |> where([p], p.project_id == ^id and (p.start > ^ago or p.stop > ^ago))
-    #    |> order_by(desc: :start)
+    |> order_by(desc: :start)
     |> Repo.all()
-    |> IO.inspect()
   end
 
   @doc """
