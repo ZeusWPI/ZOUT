@@ -69,7 +69,7 @@ defmodule ZoutWeb.ProjectView do
 
   def last_checked(data) do
     Enum.map(data, fn
-      %{ping: %Ping{start: s}} -> s
+      %{ping: %Ping{stop: s}} -> s
       _ -> nil
     end)
     |> Enum.reject(&is_nil/1)
