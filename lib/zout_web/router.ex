@@ -28,6 +28,7 @@ defmodule ZoutWeb.Router do
 
     get "/", PageController, :index
     resources "/projects", ProjectController
+    resources "/pings", PingController, only: [:show]
 
     get "/import", ImportController, :index
     post "/import", ImportController, :import

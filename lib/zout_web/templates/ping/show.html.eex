@@ -1,0 +1,15 @@
+<h1 class="title">
+  Ping voor
+  <%= @ping.project.name %> om
+  <%= FormatHelpers.human_datetime(@ping.start) %>
+  tot
+  <%= FormatHelpers.human_datetime(@ping.stop) %>
+</h1>
+<div class="subtitle">
+  Hier steken we ooit een TODO...
+</div>
+<div class="card">
+  <div class="card-content">
+    Hier komt ook ooit meer inhoud...
+  </div>
+</div>

@@ -247,4 +247,17 @@ defmodule Zout.Data do
       end)
     end)
   end
+
+  def get_ping_id(%Ping{start: start, project_id: id}) do
+    date_string = DateTime.to_iso8601(start, :basic)
+    id_string = "#{date_string}$#{id}"
+    Base.encode32(id_string, padding: false)
+  end
+
+  def get_ping!(id) do
+    id_string = Base.decode32!(id, padding: false)
+    [date_string, id_string] = String.split(id_string, "$")
+    date = Timex.parse!(date_string, "{ISO:Basic}")
+    Repo.get_by!(Ping, start: date, project_id: id_string) |> Repo.preload(:project)
+  end
 end

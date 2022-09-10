@@ -1,6 +1,7 @@
 defmodule ZoutWeb.ProjectView do
   use ZoutWeb, :view
 
+  alias Zout.Data
   alias Zout.Data.Project
   alias Zout.Data.Ping
   alias Zout.Data.Dependency
