@@ -1,4 +1,4 @@
-FROM hexpm/elixir:1.13.4-erlang-23.2.7.5-alpine-3.15.4 AS builder
+FROM elixir:1.14-alpine AS builder
 
 # install build dependencies
 RUN apk add --no-cache npm
@@ -49,7 +49,7 @@ COPY rel rel
 RUN mix release
 
 # app stage
-FROM alpine:3.15.4 AS app
+FROM alpine:3.16 AS app
 
 # install runtime dependencies
 RUN apk add --no-cache libstdc++ openssl ncurses-libs musl-locales
