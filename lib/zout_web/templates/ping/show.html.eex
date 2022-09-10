@@ -2,14 +2,15 @@
   Ping voor
   <%= @ping.project.name %> om
   <%= FormatHelpers.human_datetime(@ping.start) %>
-  tot
-  <%= FormatHelpers.human_datetime(@ping.stop) %>
 </h1>
 <div class="subtitle">
-  Hier steken we ooit een TODO...
+  <%= render_status(@ping) %>
 </div>
 <div class="card">
   <div class="card-content">
-    Hier komt ook ooit meer inhoud...
+    Geldig van: <%= FormatHelpers.human_datetime(@ping.start) %><br>
+    Geldig tot: <%= FormatHelpers.human_datetime(@ping.stop) %><br>
+    Status: <%= ProjectView.status_icon(@ping) %> <%= status_text(@ping) %> <br>
+    Project: <%= link @ping.project.name, to: Routes.project_path(@conn, :show, @ping.project) %><br>
   </div>
 </div>
