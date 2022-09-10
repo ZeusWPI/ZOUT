@@ -11,8 +11,12 @@
     <tr>
       <td class="order-item-info"><%= link project.name, to: Routes.project_path(@conn, :show, project) %></td>
       <td>
-        <%= link to: Routes.ping_path(@conn, :show, Data.get_ping_id(ping)) do %>
+        <%= if is_nil(ping) do %>
           <%= render_status(ping) %>
+        <% else %>
+          <%= link to: Routes.ping_path(@conn, :show, Data.get_ping_id(ping)) do %>
+            <%= render_status(ping) %>
+          <% end %>
         <% end %>
       </td>
       <td>
