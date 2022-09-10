@@ -142,18 +142,32 @@ defmodule Zout.Data do
       |> last(:start)
       |> Repo.one()
 
+    now = DateTime.utc_now() |> DateTime.truncate(:second)
+
     if is_nil(existing_ping) do
       Repo.insert!(%Ping{
-        start: DateTime.utc_now() |> DateTime.truncate(:second),
-        stop: DateTime.utc_now() |> DateTime.truncate(:second),
+        start: now,
+        stop: now,
         project_id: id,
         status: status,
         message: message
       })
+
+      # Check if we need to fix an old ping...
+      existing_other_ping =
+        Ping
+        |> where(project_id: ^id)
+        |> last(:start)
+        |> Repo.one()
+
+      unless is_nil(existing_other_ping) do
+        Ecto.Changeset.change(existing_other_ping, stop: now)
+        |> Repo.update!()
+      end
     else
       changeset =
         Ecto.Changeset.change(existing_ping,
-          stop: DateTime.utc_now() |> DateTime.truncate(:second),
+          stop: now,
           message: message
         )
 
