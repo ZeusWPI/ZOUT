@@ -151,10 +151,13 @@ defmodule Zout.Data do
         message: message
       })
     else
-      Repo.update!(existing_ping,
-        stop: DateTime.utc_now() |> DateTime.truncate(:second),
-        message: message
-      )
+      changeset =
+        Ecto.Changeset.change(existing_ping,
+          stop: DateTime.utc_now() |> DateTime.truncate(:second),
+          message: message
+        )
+
+      Repo.update!(changeset)
     end
   end
 

@@ -9,11 +9,11 @@ defmodule Zout.Data.Ping do
 
   @primary_key false
   schema "pings" do
-    field :start, :utc_datetime
+    field :start, :utc_datetime, primary_key: true
     field :stop, :utc_datetime
     field :status, Ecto.Enum, values: [:working, :failing, :offline, :unchecked]
     field :message, :string
 
-    belongs_to :project, Zout.Data.Project
+    belongs_to :project, Zout.Data.Project, primary_key: true
   end
 end
