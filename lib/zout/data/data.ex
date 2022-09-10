@@ -95,7 +95,7 @@ defmodule Zout.Data do
     Project
     |> where(deleted: false)
     |> join(:left, [p], c in Ping, on: c.project_id == p.id)
-    |> order_by([p, c], [p.id, desc: c.start])
+    |> order_by([p, c], [p.id, desc: c.stop])
     |> distinct([p, c], p.id)
     |> select([p, c], %{project: p, ping: c})
     |> Repo.all()
@@ -114,7 +114,7 @@ defmodule Zout.Data do
 
     Ping
     |> where([p], p.project_id == ^id and (p.start > ^ago or p.stop > ^ago))
-    |> order_by(desc: :start)
+    |> order_by(desc: :stop)
     |> Repo.all()
   end
 
@@ -129,7 +129,7 @@ defmodule Zout.Data do
     Project
     |> where(deleted: false)
     |> join(:left, [p], c in Ping, on: c.project_id == p.id)
-    |> order_by([p, c], [p.name, c.start])
+    |> order_by([p, c], [p.name, c.stop])
     |> where([p, c], c.status != :unchecked and (c.start > ^ago or c.stop > ^ago))
     |> select([p, c], %{project: p, ping: c})
     |> Repo.all()
