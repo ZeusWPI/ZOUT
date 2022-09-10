@@ -39,8 +39,8 @@
     },
     "category_percentage": "working",
     'data': [
-      <%= for %Ping{status: status, stamp: stamp} <- @historical_data do %>
-        ["<%= Timex.format!(stamp, "{YYYY}-{0M}-{0D} {h24}:{m}:{s}") %>", "<%= status %>"],
+      <%= for %Ping{status: status, start: start, stop: stop} <- @historical_data do %>
+        ["<%= Timex.format!(start, "{YYYY}-{0M}-{0D} {h24}:{m}:{s}") %>", "<%= status %>", "<%= Timex.format!(stop, "{YYYY}-{0M}-{0D} {h24}:{m}:{s}") %>"],
       <% end %>
     ]
   }];

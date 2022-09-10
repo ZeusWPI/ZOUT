@@ -27,7 +27,7 @@
               pkgs.ffmpeg
               pkgs.nixpkgs-fmt
               pkgs.erlang
-              pkgs.elixir
+              pkgs.elixir_1_14
               (pkgs.postgresql_14.withPackages (p: [ p.timescaledb ]))
               pkgs.inotify-tools
               pkgs.nodejs-16_x

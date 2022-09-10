@@ -81,44 +81,28 @@ defmodule Zout.Data do
   end
 
   @doc """
-  List all projects and status information.
+  List all projects and the latest ping.
 
-  The returned list will contain each active project, with:
+  The returned list contains a map with two properties:
 
-  - The latest ping to display the current status (`ping`).
-  - The lastet ping with a different status (`last_ping`).
+  - `:project` - the project
+  - `:ping` - the ping
 
-  Note that this last one cheats a bit: to be exact, we would want the earliest
-  ping in the previous sequence of pings with a different status (the pings in
-  a sequence all have the same status).
-
-  For example, if there are two failing pings A, B, followed by three offline
-  ping C, D, E, this function would current return E as first ping and B as the
-  second ping. However, ideally we would want C as the second ping. However, I
-  haven't figured out the SQL for thas.
-
+  Note that the `:ping` may be `nil` if there are no pings for the project.
   """
   def list_projects_and_status do
-    most_recent_ping_query =
-      Ping
-      |> distinct(:project_id)
-      |> order_by([:project_id, desc: :stamp])
-
+    # Unfortunately, we cannot sort in the database :(
     Project
     |> where(deleted: false)
-    |> join(:left, [p], c in subquery(most_recent_ping_query), on: p.id == c.project_id)
-    |> join(
-      :left_lateral,
-      [p, c],
-      d in fragment(
-        "(SELECT DISTINCT ON (project_id) * FROM pings WHERE status != ? ORDER BY project_id, stamp DESC)",
-        c.status
-      ),
-      on: p.id == d.project_id
-    )
-    |> select([p, c, d], %{project: p, ping: c, last_ping: %{stamp: d.stamp, status: d.status}})
-    |> order_by([p, c, d], [c.status == ^"unchecked", p.name])
+    |> join(:left, [p], c in Ping, on: c.project_id == p.id)
+    |> order_by([p, c], [p.id, desc: c.start])
+    |> distinct([p, c], p.id)
+    |> select([p, c], %{project: p, ping: c})
     |> Repo.all()
+    |> Enum.sort_by(fn
+      %{project: p, ping: nil} -> {False, p.name}
+      %{project: p, ping: c} -> {c.status == :unchecked, p.name}
+    end)
   end
 
   @doc """
@@ -129,9 +113,8 @@ defmodule Zout.Data do
     ago = Timex.now() |> Timex.shift(duration)
 
     Ping
-    |> where([p], p.project_id == ^id and p.stamp >= ^ago)
-    |> order_by(desc: :stamp)
-    |> limit(10000)
+    |> where([p], p.project_id == ^id and (p.start > ^ago or p.stop > ^ago))
+    |> order_by(desc: :start)
     |> Repo.all()
   end
 
@@ -139,42 +122,57 @@ defmodule Zout.Data do
   Get recent pings for all projects.
 
   This will not include projects that only have "unchecked" pings.
-  TODO: how does this perform with a lot of pings? Who knows.
   """
   def all_recent_pings(duration) do
     ago = Timex.now() |> Timex.shift(duration)
 
     Project
-    |> join(
-      :inner_lateral,
-      [p],
-      pi in fragment(
-        """
-        SELECT * FROM pings
-        WHERE project_id = ? and stamp > ? and status != 'unchecked'
-        ORDER BY stamp DESC
-        LIMIT 2000
-        """,
-        p.id,
-        ^ago
-      ),
-      on: true
-    )
-    |> select([p, pi], %{
-      project: %{id: p.id, name: p.name},
-      ping: %{status: pi.status, stamp: pi.stamp}
-    })
+    |> where(deleted: false)
+    |> join(:left, [p], c in Ping, on: c.project_id == p.id)
+    |> order_by([p, c], [p.name, c.start])
+    |> where([p, c], c.status != :unchecked and (c.start > ^ago or c.stop > ^ago))
+    |> select([p, c], %{project: p, ping: c})
     |> Repo.all()
   end
 
   defp handle_check_result(%Project{id: id}, {status, message, response_time}) do
-    Repo.insert!(%Ping{
-      stamp: DateTime.utc_now() |> DateTime.truncate(:second),
-      project_id: id,
-      status: status,
-      message: message,
-      response_time: response_time
-    })
+    existing_ping =
+      Ping
+      |> where(project_id: ^id, status: ^status)
+      |> last(:start)
+      |> Repo.one()
+
+    now = DateTime.utc_now() |> DateTime.truncate(:second)
+
+    if is_nil(existing_ping) do
+      Repo.insert!(%Ping{
+        start: now,
+        stop: now,
+        project_id: id,
+        status: status,
+        message: message
+      })
+
+      # Check if we need to fix an old ping...
+      existing_other_ping =
+        Ping
+        |> where(project_id: ^id)
+        |> last(:start)
+        |> Repo.one()
+
+      unless is_nil(existing_other_ping) do
+        Ecto.Changeset.change(existing_other_ping, stop: now)
+        |> Repo.update!()
+      end
+    else
+      changeset =
+        Ecto.Changeset.change(existing_ping,
+          stop: now,
+          message: message
+        )
+
+      Repo.update!(changeset)
+    end
   end
 
   @doc """
@@ -265,5 +263,27 @@ defmodule Zout.Data do
         |> Repo.update!()
       end)
     end)
+  end
+
+  def get_ping_id(%Ping{start: start, project_id: id}) do
+    hex_internal_id =
+      "#{DateTime.to_iso8601(start, :basic)}$#{id}"
+      |> Base.encode16()
+      |> String.to_integer(16)
+
+    Hashids.new()
+    |> Hashids.encode(hex_internal_id)
+  end
+
+  def get_ping!(id) do
+    [date_string, id_string] =
+      Hashids.new()
+      |> Hashids.decode!(id)
+      |> then(fn [decoded_id] -> Integer.to_string(decoded_id, 16) end)
+      |> Base.decode16!()
+      |> String.split("$")
+
+    date = Timex.parse!(date_string, "{ISO:Basic}")
+    Repo.get_by!(Ping, start: date, project_id: id_string) |> Repo.preload(:project)
   end
 end

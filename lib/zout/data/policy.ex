@@ -12,7 +12,10 @@ defmodule Zout.Data.Policy do
   def authorize(:project_index, _user, _params), do: :ok
 
   @impl true
-  def authorize(:project_show, _user, _params), do: :ok
+  def authorize(:project_show, _user, _project), do: :ok
+
+  @impl true
+  def authorize(:ping_show, _user, _ping), do: :ok
 
   # Default action: admins can do anything
   @impl true

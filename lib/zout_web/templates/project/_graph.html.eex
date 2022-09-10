@@ -66,13 +66,13 @@
     layout: algorithm,
     elements: [
       // All nodes.
-      <%= for %{project: project, ping: ping, last_ping: pong} <- @projects_and_pings do %>
+      <%= for %{project: project, ping: ping} <- @projects_and_pings do %>
         {
           data: {
             id: "<%= project.id %>",
             name: '<%= javascript_escape(link "#{project.name}", to: Routes.project_path(@conn, :show, project)) %>',
             color: '<%= status_colour(ping) %>',
-            text: '<%= render_status(ping, pong, false) %>',
+            text: '<%= render_status(ping, false) %>',
             textColor: '<%= text_colour(ping) %>',
           },
         },
