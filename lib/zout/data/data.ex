@@ -136,15 +136,19 @@ defmodule Zout.Data do
   end
 
   defp handle_check_result(%Project{id: id}, {status, message, response_time}) do
+    # Get the latest ping.
+    # This should not be nil, unless this is the very first ping for a project.
     existing_ping =
       Ping
-      |> where(project_id: ^id, status: ^status)
+      |> where(project_id: ^id)
       |> last(:stop)
       |> Repo.one()
 
     now = DateTime.utc_now() |> DateTime.truncate(:second)
 
-    if is_nil(existing_ping) do
+    # If we don't have an existing ping or it is not of the same status,
+    # begin a new interval.
+    if is_nil(existing_ping) or existing_ping.status != status do
       Repo.insert!(%Ping{
         start: now,
         stop: now,
@@ -153,15 +157,8 @@ defmodule Zout.Data do
         message: message
       })
 
-      # Check if we need to fix an old ping...
-      existing_other_ping =
-        Ping
-        |> where(project_id: ^id)
-        |> last(:stop)
-        |> Repo.one()
-
-      unless is_nil(existing_other_ping) do
-        Ecto.Changeset.change(existing_other_ping, stop: now)
+      unless is_nil(existing_ping) do
+        Ecto.Changeset.change(existing_ping, stop: now)
         |> Repo.update!()
       end
     else
