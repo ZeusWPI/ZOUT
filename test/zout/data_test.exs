@@ -356,14 +356,14 @@ defmodule Zout.DataTest do
 
       resulting_ping_3 = Enum.at(all_pings, 0) |> Map.delete(:project)
       resulting_ping_2 = Enum.at(all_pings, 1) |> Map.delete(:project)
-      _resulting_ping_1 = Enum.at(all_pings, 2) |> Map.delete(:project)
+      resulting_ping_1 = Enum.at(all_pings, 2) |> Map.delete(:project)
 
       assert resulting_ping_3 == working_ping_2
       assert resulting_ping_2 == failing_ping
 
-      assert DateTime.compare(working_ping_1.stop, resulting_ping_3.stop) == :lt
-      assert DateTime.compare(working_ping_1.start, resulting_ping_3.start) == :eq
-      assert resulting_ping_3.status == :working
+      assert DateTime.compare(working_ping_1.stop, resulting_ping_1.stop) == :lt
+      assert DateTime.compare(working_ping_1.start, resulting_ping_1.start) == :eq
+      assert resulting_ping_1.status == :working
     end
 
     test "does not use previous interval with same status" do
