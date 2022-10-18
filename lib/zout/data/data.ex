@@ -1,6 +1,8 @@
 defmodule Zout.Data do
   @moduledoc """
-  The Data context.
+  Manage application data.
+
+  Responsible for managing `Project`s and `Ping`s.
   """
 
   import Ecto.Query, warn: false
@@ -33,7 +35,7 @@ defmodule Zout.Data do
   @doc """
   Gets a single project by slug.
 
-  Raises if the Project does not exist.
+  Returns `nil` if the project doesn't exist.
   """
   def get_project_by_slug(slug),
     do: Repo.get_by(Project, slug: slug) |> Repo.preload(:dependencies)
@@ -100,7 +102,7 @@ defmodule Zout.Data do
     |> select([p, c], %{project: p, ping: c})
     |> Repo.all()
     |> Enum.sort_by(fn
-      %{project: p, ping: nil} -> {False, p.name}
+      %{project: p, ping: nil} -> {true, p.name}
       %{project: p, ping: c} -> {c.status == :unchecked, p.name}
     end)
   end
@@ -135,7 +137,13 @@ defmodule Zout.Data do
     |> Repo.all()
   end
 
-  defp handle_check_result(%Project{id: id}, {status, message, response_time}) do
+  @doc """
+  Handle the result of a checker.
+
+  This will consolidate the new ping with the existing ping, to only save intervals,
+  to prevent ballooning the storage and processing requirements.
+  """
+  def handle_check_result(%Project{id: id}, {status, message, response_time}) do
     # Get the latest ping.
     # This should not be nil, unless this is the very first ping for a project.
     existing_ping =
