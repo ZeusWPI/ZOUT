@@ -7,6 +7,6 @@ defmodule ZoutWeb.PageController do
   end
 
   def crash(conn, _params) do
-    raise "𝕯𝖔𝖒𝖎𝖓𝖚𝖘 𝖓𝖔𝖓 𝖘𝖈𝖗𝖎𝖇𝖎𝖙 𝕻𝖞𝖙𝖍𝖔𝖓𝖎𝖘"
+    text conn, "𝕯𝖔𝖒𝖎𝖓𝖚𝖘 𝖓𝖔𝖓 𝖘𝖈𝖗𝖎𝖇𝖎𝖙 𝕻𝖞𝖙𝖍𝖔𝖓𝖎𝖘"
   end
 end
