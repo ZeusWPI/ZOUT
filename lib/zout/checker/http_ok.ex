@@ -20,6 +20,7 @@ defmodule Zout.Checker.HttpOk do
   This check requires one param: the `url` to which the request will be sent.
   """
   import Ecto.Changeset
+  require Logger
 
   @behaviour Zout.Checker
 

@@ -3,6 +3,7 @@ defmodule Zout.Checker.HydraApi do
   Checks the Hydra (resto) API. Nobody else should use it.
   """
   import Ecto.Changeset
+  require Logger
 
   @behaviour Zout.Checker
 
