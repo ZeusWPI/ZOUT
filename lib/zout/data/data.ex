@@ -175,8 +175,9 @@ defmodule Zout.Data do
       unless is_nil(existing_ping) do
         Logger.info("Stopping existing ping interval")
 
-        Ecto.Changeset.change(existing_ping, stop: now)
+        result = Ecto.Changeset.change(existing_ping, stop: now)
         |> Repo.update!()
+        Logger.info("Updated old ping: #{inspect(result)}")
       end
     else
       Logger.info("Updating existing ping interval")
