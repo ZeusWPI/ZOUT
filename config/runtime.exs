@@ -96,4 +96,14 @@ if config_env() == :prod do
   config :zout, ZoutWeb.Auth.Guardian,
     issuer: "zout",
     secret_key: secret_key_base
+
+  config :sentry,
+    dsn: System.get_env("SENTRY_DNS"),
+    environment_name: :prod,
+    enable_source_code_context: true,
+    root_source_code_path: File.cwd!(),
+    tags: %{
+      env: "production"
+    },
+    included_environments: [:prod]
 end
