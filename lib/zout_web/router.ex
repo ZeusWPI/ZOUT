@@ -27,6 +27,8 @@ defmodule ZoutWeb.Router do
     pipe_through [:browser, :auth]
 
     get "/", PageController, :index
+    get "/crash", PageController, :crash
+
     resources "/projects", ProjectController
     resources "/pings", PingController, only: [:show]
 
