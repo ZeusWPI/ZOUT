@@ -48,12 +48,5 @@ config :logger, level: :info
 #
 # Check `Plug.SSL` for all available options in `force_ssl`.
 
-config :sentry,
-  dsn: System.get_env("SENTRY_DNS"),
-  environment_name: Mix.env(),
-  included_environments: [:prod],
-  enable_source_code_context: true,
-  root_source_code_paths: [File.cwd!()]
-
 config :logger,
   backends: [:console, Sentry.LoggerBackend]

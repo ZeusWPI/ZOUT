@@ -63,6 +63,13 @@ if config_env() == :prod do
     ],
     secret_key_base: secret_key_base
 
+  config :sentry,
+    dsn: System.get_env("SENTRY_DNS"),
+    environment_name: "production",
+    included_environments: [:prod],
+    enable_source_code_context: true,
+    root_source_code_paths: [File.cwd!()]
+
   # ## Configuring the mailer
   #
   # In production you need to configure the mailer to use a different adapter.
