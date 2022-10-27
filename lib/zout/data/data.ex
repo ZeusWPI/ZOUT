@@ -187,7 +187,8 @@ defmodule Zout.Data do
           message: message
         )
 
-      Repo.update!(changeset)
+      result = Repo.update!(changeset)
+      Logger.info("Updated ping: #{inspect(result)}")
     end
   end
 
