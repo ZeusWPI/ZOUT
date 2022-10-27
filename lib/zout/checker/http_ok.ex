@@ -30,6 +30,8 @@ defmodule Zout.Checker.HttpOk do
   def check(params) do
     url = params["url"]
 
+    Logger.info("Doing HTTP/200 check on #{url}")
+
     request = Finch.build(:get, url)
 
     case Finch.request(request, ZoutFinch) do

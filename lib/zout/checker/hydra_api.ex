@@ -44,6 +44,8 @@ defmodule Zout.Checker.HydraApi do
   def check(_params \\ %{}) do
     url = "https://hydra.ugent.be/api/2.0/"
 
+    Logger.info("Doing Hydra check on #{url}")
+
     request = Finch.build(:get, url)
 
     case Finch.request(request, ZoutFinch) do
