@@ -151,7 +151,7 @@ defmodule Zout.Data do
     existing_ping =
       Ping
       |> where(project_id: ^id)
-      |> last([:stop, :start])
+      |> last(:stop)
       |> Repo.one()
 
     now = DateTime.utc_now() |> DateTime.truncate(:second)
@@ -164,9 +164,12 @@ defmodule Zout.Data do
     if is_nil(existing_ping) or existing_ping.status != status do
       Logger.info("Starting new ping interval")
 
+      # Prevent multiple pings with the same end point.
+      stop = now |> Timex.shift(seconds: 1)
+
       Repo.insert!(%Ping{
         start: now,
-        stop: now,
+        stop: stop,
         project_id: id,
         status: status,
         message: message
