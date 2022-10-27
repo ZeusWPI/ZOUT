@@ -151,7 +151,7 @@ defmodule Zout.Data do
     existing_ping =
       Ping
       |> where(project_id: ^id)
-      |> last(:stop)
+      |> last([:stop, :start])
       |> Repo.one()
 
     now = DateTime.utc_now() |> DateTime.truncate(:second)
