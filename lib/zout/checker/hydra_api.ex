@@ -51,8 +51,8 @@ defmodule Zout.Checker.HydraApi do
 
     case Finch.request(request, ZoutFinch) do
       {:ok, %Finch.Response{status: 200, body: body}} -> check_api_date(body)
-      {:ok, _} -> {:failing, nil}
-      _ -> {:offline, nil}
+      {:ok, _} -> {:failing, nil, nil}
+      _ -> {:offline, nil, nil}
     end
   end
 
