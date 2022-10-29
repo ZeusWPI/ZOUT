@@ -78,7 +78,8 @@ defmodule Zout.MixProject do
       {:hashids, "~> 2.0"},
       {:ex_machina, "~> 2.7", only: :test},
       {:excoveralls, "~> 0.10", only: :test},
-      {:bypass, "~> 2.1", only: :test}
+      {:bypass, "~> 2.1", only: :test},
+      {:dialyxir, "~> 1.2", only: [:dev], runtime: false}
     ]
   end
 
