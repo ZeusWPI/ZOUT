@@ -28,13 +28,7 @@ defmodule ZoutWeb.Auth.UeberauthStrategy do
     client = ZoutWeb.Auth.OAuthStrategy.get_token!(code: code)
     conn = put_private(conn, :zeus_token, client.token)
 
-    if client.token.access_token == nil do
-      set_errors!(conn, [
-        error(client.other_params["error"], client.other_params["error_description"])
-      ])
-    else
-      fetch_user(conn, client)
-    end
+    fetch_user(conn, client)
   end
 
   @impl true

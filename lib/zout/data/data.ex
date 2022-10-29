@@ -236,7 +236,7 @@ defmodule Zout.Data do
 
   It returns a list of created projects.
   """
-  @spec import(Dotx.graph()) :: []
+  @spec import(Dotx.graph()) :: {:ok, []} | {:error, any()}
   def import(graph) do
     {nodes, graphs} = Dotx.to_nodes(graph)
 

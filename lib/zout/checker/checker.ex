@@ -13,7 +13,7 @@ defmodule Zout.Checker do
   @doc """
   Get the identifier for this checker.
   """
-  @callback identifier() :: Atom.t()
+  @callback identifier() :: atom()
 
   @doc """
   Execute the check.
@@ -28,9 +28,7 @@ defmodule Zout.Checker do
   will be displayed to users.
   """
   @callback check(map()) ::
-              :working
-              | {:failing, String.t() | nil}
-              | {:offline, String.t() | nil, integer() | nil}
+              {:working | :failing | :offline | :unchecked, String.t() | nil, integer() | nil}
 
   @doc """
   Extract the necessary params from the changeset.
