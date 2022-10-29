@@ -37,8 +37,8 @@ jobs:
       - name: Set up Elixir
         uses: erlef/setup-beam@713cc2ffe3d38766349884daa5a1180763755855
         with:
-          elixir-version: '1.13.3' # Define the elixir version [required]
-          otp-version: '24.1' # Define the OTP version [required]
+          elixir-version: '1.14.1' # Define the elixir version [required]
+          otp-version: '25.1' # Define the OTP version [required]
       - name: Restore dependencies cache
         uses: actions/cache@v3
         with:
@@ -60,8 +60,8 @@ jobs:
       - name: Set up Elixir
         uses: erlef/setup-beam@713cc2ffe3d38766349884daa5a1180763755855
         with:
-          elixir-version: '1.13.3' # Define the elixir version [required]
-          otp-version: '24.1' # Define the OTP version [required]
+          elixir-version: '1.14.1' # Define the elixir version [required]
+          otp-version: '25.1' # Define the OTP version [required]
       - name: Restore dependencies cache
         uses: actions/cache@v3
         with:
@@ -80,8 +80,8 @@ jobs:
       - name: Set up Elixir
         uses: erlef/setup-beam@713cc2ffe3d38766349884daa5a1180763755855
         with:
-          elixir-version: '1.13.3' # Define the elixir version [required]
-          otp-version: '24.1' # Define the OTP version [required]
+          elixir-version: '1.14.1' # Define the elixir version [required]
+          otp-version: '25.1' # Define the OTP version [required]
       - name: Restore dependencies cache
         uses: actions/cache@v3
         with:
