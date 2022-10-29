@@ -415,5 +415,20 @@ defmodule Zout.DataTest do
       assert DateTime.compare(resulting_ping_1.start, working_ping_1.start) == :eq
       assert resulting_ping_0.status == :failing
     end
+
+    test "handles every status correctly" do
+      for status <- [:working, :failing, :offline, :unchecked] do
+        project = insert(:project)
+        Data.handle_check_result(project, {status, nil, nil})
+
+        all_pings =
+          Data.Ping
+          |> order_by([p], p.start)
+          |> Repo.all()
+
+        ping = Enum.at(all_pings, 0)
+        assert ping.status == status
+      end
+    end
   end
 end
