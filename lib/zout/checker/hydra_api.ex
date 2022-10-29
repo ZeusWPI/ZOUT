@@ -42,8 +42,8 @@ defmodule Zout.Checker.HydraApi do
   end
 
   @impl true
-  def check(_params \\ %{}) do
-    url = "https://hydra.ugent.be/api/2.0/"
+  def check(params \\ %{}) do
+    url = Map.get(params, "url", "https://hydra.ugent.be/api/2.0/")
 
     Logger.info("Doing Hydra check on #{url}")
 
