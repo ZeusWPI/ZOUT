@@ -37,3 +37,7 @@ npm-debug.log
 /tmp/
 .env
 /Jaspers zeer mooi en met zorg opgestelde schema der Zeus infrastructuur.dot
+
+# Dialyzer
+/priv/plts/*.plt
+/priv/plts/*.plt.hash

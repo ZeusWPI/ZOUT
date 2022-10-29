@@ -22,6 +22,9 @@ defmodule Zout.MixProject do
         zout: [
           strip_beams: [keep: ["Docs"]]
         ]
+      ],
+      dialyzer: [
+        plt_file: {:no_warn, "priv/plts/dialyzer.plt"}
       ]
     ]
   end
