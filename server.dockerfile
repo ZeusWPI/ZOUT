@@ -49,7 +49,7 @@ COPY rel rel
 RUN mix release
 
 # app stage
-FROM alpine:3.18 AS app
+FROM alpine:3.17 AS app
 
 # install runtime dependencies
 RUN apk add --no-cache libstdc++ openssl ncurses-libs musl-locales
