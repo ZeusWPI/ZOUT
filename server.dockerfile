@@ -52,7 +52,7 @@ RUN mix release
 FROM alpine:3.17 AS app
 
 # install runtime dependencies
-RUN apk add --no-cache libstdc++ openssl ncurses-libs musl-locales
+RUN apk add --no-cache libstdc++ openssl ncurses-libs musl-locales openssl1.1-compat
 
 WORKDIR "/app"
 RUN chown nobody /app
