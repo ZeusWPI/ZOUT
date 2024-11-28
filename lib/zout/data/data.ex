@@ -165,7 +165,7 @@ defmodule Zout.Data do
       Logger.info("Starting new ping interval")
 
       # Prevent multiple pings with the same end point.
-      stop = now |> Timex.shift(seconds: 1)
+      stop = now |> Timex.shift(seconds: 1) |> DateTime.truncate(:second)
 
       Repo.insert!(%Ping{
         start: now,
