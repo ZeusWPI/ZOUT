@@ -207,7 +207,7 @@ defmodule Zout.Data do
         :unchecked -> 3
       end
 
-    :telemetry.execute([:zout, :ping, :status], %{value: status_code}, project)
+    :telemetry.execute([:zout, :project, :status], %{value: status_code}, project)
   end
 
   @doc """

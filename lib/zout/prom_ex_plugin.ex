@@ -4,27 +4,27 @@ defmodule Zout.PromExPlugin do
   @impl true
   def event_metrics(_opts) do
     [
-      ping_status_event()
+      project_status_event()
     ]
   end
 
-  defp ping_status_event() do
+  defp project_status_event() do
     Event.build(
-      :ping_status_event_metrics,
+      :project_status_event_metrics,
       [
         last_value(
-          [:zout, :ping, :status],
-          event_name: [:zout, :ping, :status],
-          description: "The status of ping of a project",
+          [:zout, :project, :status],
+          event_name: [:zout, :project, :status],
+          description: "The status of a project",
           measurement: & &1.value,
           tags: [:project, :homepage],
-          tag_values: &ping_status_tag_values/1
+          tag_values: &project_status_tag_values/1
         )
       ]
     )
   end
 
-  defp ping_status_tag_values(project) do
+  defp project_status_tag_values(project) do
     %{
       project: project.name,
       homepage: project.home
