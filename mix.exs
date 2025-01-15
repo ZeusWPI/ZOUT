@@ -83,6 +83,7 @@ defmodule Zout.MixProject do
       {:ex_machina, "~> 2.7", only: :test},
       {:excoveralls, "~> 0.10", only: :test},
       {:bypass, "~> 2.1", only: :test},
+      {:dialyxir, "~> 1.2", only: [:dev], runtime: false},
       {:prom_ex, "~> 1.11.0"}
     ]
   end
