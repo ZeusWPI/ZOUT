@@ -48,14 +48,15 @@ defmodule Zout.MixProject do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
-      {:phoenix, "~> 1.6.9"},
+      {:phoenix, "~> 1.7.0"},
       {:phoenix_ecto, "~> 4.4"},
       {:ecto_sql, "~> 3.6"},
       {:ecto_psql_extras, "~> 0.6"},
       {:postgrex, ">= 0.0.0"},
       {:phoenix_html, "~> 3.0"},
       {:phoenix_live_reload, "~> 1.2", only: :dev},
-      {:phoenix_live_view, "~> 0.18.2"},
+      {:phoenix_live_view, "~> 0.20.0"},
+      {:phoenix_view, "~> 2.0.4"},
       {:floki, ">= 0.30.0", only: :test},
       {:phoenix_live_dashboard, "~> 0.7"},
       {:esbuild, "~> 0.4", runtime: Mix.env() == :dev},
@@ -82,7 +83,7 @@ defmodule Zout.MixProject do
       {:ex_machina, "~> 2.7", only: :test},
       {:excoveralls, "~> 0.10", only: :test},
       {:bypass, "~> 2.1", only: :test},
-      {:dialyxir, "~> 1.2", only: [:dev], runtime: false}
+      {:prom_ex, "~> 1.11.0"}
     ]
   end
 
