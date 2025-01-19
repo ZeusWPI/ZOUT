@@ -1,4 +1,4 @@
-FROM elixir:1.14-alpine AS builder
+FROM elixir:1.18-alpine AS builder
 
 # install build dependencies
 RUN apk add --no-cache npm

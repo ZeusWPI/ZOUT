@@ -17,7 +17,7 @@ jobs:
 
     services:
       postgres:
-        image: timescale/timescaledb:latest-pg14
+        image: timescale/timescaledb:latest-pg17
         env:
           POSTGRES_HOST: localhost
           POSTGRES_DB: zout_test
@@ -37,8 +37,8 @@ jobs:
       - name: Set up Elixir
         uses: erlef/setup-beam@b9c58b0450cd832ccdb3c17cc156a47065d2114f
         with:
-          elixir-version: '1.14.1' # Define the elixir version [required]
-          otp-version: '25.1' # Define the OTP version [required]
+          elixir-version: '1.18.1'
+          otp-version: '27'
       - name: Restore dependencies cache
         uses: actions/cache@v3
         with:
@@ -60,8 +60,8 @@ jobs:
       - name: Set up Elixir
         uses: erlef/setup-beam@b9c58b0450cd832ccdb3c17cc156a47065d2114f
         with:
-          elixir-version: '1.14.1' # Define the elixir version [required]
-          otp-version: '25.1' # Define the OTP version [required]
+          elixir-version: '1.18.1'
+          otp-version: '27'
       - name: Restore dependencies cache
         uses: actions/cache@v3
         with:
@@ -80,8 +80,8 @@ jobs:
       - name: Set up Elixir
         uses: erlef/setup-beam@b9c58b0450cd832ccdb3c17cc156a47065d2114f
         with:
-          elixir-version: '1.14.1' # Define the elixir version [required]
-          otp-version: '25.1' # Define the OTP version [required]
+          elixir-version: '1.18.1'
+          otp-version: '27'
       - name: Restore dependencies cache
         uses: actions/cache@v3
         with:

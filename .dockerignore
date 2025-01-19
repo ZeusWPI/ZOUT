@@ -35,6 +35,7 @@
 /_build/
 /deps/
 *.ez
+/.data/
 
 # Generated on crash by the VM
 erl_crash.dump

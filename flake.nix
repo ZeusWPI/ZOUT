@@ -6,17 +6,14 @@
     flake-utils.url = "github:numtide/flake-utils";
     devshell = {
       url = "github:numtide/devshell";
-      inputs = {
-        flake-utils.follows = "flake-utils";
-        nixpkgs.follows = "nixpkgs";
-      };
+      inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
   outputs = { self, nixpkgs, devshell, flake-utils }:
     flake-utils.lib.eachDefaultSystem (system:
       let
-        pkgs = import nixpkgs { inherit system; overlays = [ devshell.overlay ]; };
+        pkgs = import nixpkgs { inherit system; overlays = [ devshell.overlays.default ]; config.allowUnfree = true; };
       in
       {
         devShells = rec {
@@ -26,17 +23,17 @@
             packages = [
               pkgs.ffmpeg
               pkgs.nixpkgs-fmt
-              pkgs.erlang
-              pkgs.elixir_1_14
-              (pkgs.postgresql_14.withPackages (p: [ p.timescaledb ]))
+              pkgs.erlang_27
+              pkgs.elixir_1_18
+              (pkgs.postgresql_17.withPackages (p: [ p.timescaledb ]))
               pkgs.inotify-tools
-              pkgs.nodejs-16_x
+              pkgs.nodejs_22
               pkgs.docker-compose
             ];
             env = [
               {
                 name = "PGDATA";
-                eval = "$PWD/tmp/postgres";
+                eval = "$PRJ_DATA_DIR/postgres";
               }
               {
                 name = "DATABASE_HOST";
@@ -62,7 +59,7 @@
                 help = "Start postgres instance";
                 command = ''
                   [ ! -d $PGDATA ] && pg:setup
-                  pg_ctl -D $PGDATA -U postgres start -l tmp/postgres.log
+                  pg_ctl -D $PGDATA -U postgres start -l $PRJ_DATA_DIR/postgres.log
                 '';
               }
               {
@@ -86,18 +83,9 @@
                 category = "editor";
                 help = "Create shortcuts for Intellij SDK";
                 command = ''
-                  mkdir -p "$PWD/tmp/current"
-                  ln -sfn ${pkgs.erlang} "$PWD/tmp/current/erlang"
-                  ln -sfn ${pkgs.elixir} "$PWD/tmp/current/elixir"
-                '';
-              }
-              {
-                name = "idea";
-                category = "editor";
-                help = "Start Intellij Ultimate (system) in this project";
-                command = ''
-                  link
-                  idea-ultimate . >/dev/null 2>&1 &
+                  mkdir -p "$PRJ_DATA_DIR/current"
+                  ln -sfn ${pkgs.erlang} "$PRJ_DATA_DIR/current/erlang"
+                  ln -sfn ${pkgs.elixir} "$PRJ_DATA_DIR/current/elixir"
                 '';
               }
             ];
