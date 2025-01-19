@@ -4,7 +4,6 @@ defmodule ZoutWeb.ImportController do
   action_fallback ZoutWeb.FallbackController
 
   alias Zout.Data
-  alias Zout.Data.Project
   alias ZoutWeb.Auth.Guardian
 
   def index(conn, params) do

@@ -30,14 +30,14 @@ defmodule ZoutWeb.AuthController do
     end
   end
 
-  def callback(%{assigns: %{ueberauth_failure: fails}} = conn, params) do
+  def callback(%{assigns: %{ueberauth_failure: fails}} = conn, _params) do
     # do things with the failure
     IO.inspect("FAILURE")
     IO.inspect(fails)
     render(conn, "no")
   end
 
-  def callback(%{assigns: %{ueberauth_auth: auth}} = conn, params) do
+  def callback(%{assigns: %{ueberauth_auth: auth}} = conn, _params) do
     user = Accounts.update_or_create!(auth)
 
     redirect_url =

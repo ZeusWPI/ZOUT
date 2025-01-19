@@ -22,7 +22,7 @@ defmodule ZoutWeb do
       use Phoenix.Controller, namespace: ZoutWeb
 
       import Plug.Conn
-      import ZoutWeb.Gettext
+      use Gettext, backend: ZoutWeb.Gettext
       alias ZoutWeb.Router.Helpers, as: Routes
     end
   end
@@ -80,7 +80,7 @@ defmodule ZoutWeb do
   def channel do
     quote do
       use Phoenix.Channel
-      import ZoutWeb.Gettext
+      use Gettext, backend: ZoutWeb.Gettext
     end
   end
 
@@ -98,7 +98,7 @@ defmodule ZoutWeb do
       import Phoenix.View
 
       import ZoutWeb.ErrorHelpers
-      import ZoutWeb.Gettext
+      use Gettext, backend: ZoutWeb.Gettext
       alias ZoutWeb.Router.Helpers, as: Routes
     end
   end

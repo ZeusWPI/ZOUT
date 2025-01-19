@@ -3,7 +3,6 @@ defmodule ZoutWeb.ErrorHelpers do
   Conveniences for translating and building error messages.
   """
 
-  import Phoenix.HTML
   import Phoenix.HTML.Form
   use PhoenixHTMLHelpers
 
@@ -23,7 +22,7 @@ defmodule ZoutWeb.ErrorHelpers do
   Return the "is-danger" string if an error exists, in addition to other classes.
   """
   def input_class(form, field, classes \\ "input") do
-    Enum.map(Keyword.get_values(form.errors, field), fn error ->
+    Enum.map(Keyword.get_values(form.errors, field), fn _error ->
       "is-danger"
     end)
     |> Enum.uniq()
