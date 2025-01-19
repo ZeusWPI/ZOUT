@@ -198,6 +198,18 @@ defmodule Zout.Data do
     end
   end
 
+  def emit_event(project, {status, _message, _response_time}) do
+    status_code =
+      case status do
+        :working -> 0
+        :failing -> 1
+        :offline -> 2
+        :unchecked -> 3
+      end
+
+    :telemetry.execute([:zout, :project, :status], %{value: status_code}, project)
+  end
+
   @doc """
   Run the checker for each project.
 
@@ -213,6 +225,7 @@ defmodule Zout.Data do
       result = check_module.check(project.params)
       Logger.info("Result: #{inspect(result)}")
       handle_check_result(project, result)
+      emit_event(project, result)
     end)
   end
 
