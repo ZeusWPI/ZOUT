@@ -16,14 +16,16 @@ defmodule ZoutWeb do
   below. Instead, define any helper function in modules
   and import those modules here.
   """
+  def static_paths, do: ~w(assets fonts images favicon.ico robots.txt)
 
   def controller do
     quote do
       use Phoenix.Controller, namespace: ZoutWeb
 
       import Plug.Conn
-      import ZoutWeb.Gettext
-      alias ZoutWeb.Router.Helpers, as: Routes
+      use Gettext, backend: ZoutWeb.Gettext
+
+      unquote(verified_routes())
     end
   end
 
@@ -80,14 +82,16 @@ defmodule ZoutWeb do
   def channel do
     quote do
       use Phoenix.Channel
-      import ZoutWeb.Gettext
+      use Gettext, backend: ZoutWeb.Gettext
     end
   end
 
   defp view_helpers do
     quote do
       # Use all HTML functionality (forms, tags, etc)
-      use Phoenix.HTML
+      import Phoenix.HTML
+      import Phoenix.HTML.Form
+      use PhoenixHTMLHelpers
 
       # Import LiveView and .heex helpers (live_render, live_patch, <.form>, etc)
       import Phoenix.LiveView.Helpers
@@ -96,8 +100,9 @@ defmodule ZoutWeb do
       import Phoenix.View
 
       import ZoutWeb.ErrorHelpers
-      import ZoutWeb.Gettext
-      alias ZoutWeb.Router.Helpers, as: Routes
+      use Gettext, backend: ZoutWeb.Gettext
+
+      unquote(verified_routes())
     end
   end
 
@@ -106,5 +111,14 @@ defmodule ZoutWeb do
   """
   defmacro __using__(which) when is_atom(which) do
     apply(__MODULE__, which, [])
+  end
+
+  def verified_routes do
+    quote do
+      use Phoenix.VerifiedRoutes,
+        endpoint: ZoutWeb.Endpoint,
+        router: ZoutWeb.Router,
+        statics: ZoutWeb.static_paths()
+    end
   end
 end

@@ -1,7 +1,7 @@
 <h1 class="title">
   <%= @project.name %>
   <%= if can?(@conn, :project_edit, @project) do %>
-    <%= link "Bewerken", to: Routes.project_path(@conn, :edit, @project), class: "button is-primary is-small" %>
+    <%= link "Bewerken", to: ~p"/projects/#{@project}/edit", class: "button is-primary is-small" %>
   <% end %>
 </h1>
 <div class="subtitle">

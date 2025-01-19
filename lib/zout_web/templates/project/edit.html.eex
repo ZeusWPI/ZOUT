@@ -6,6 +6,6 @@
 </div>
 <div class="card">
   <div class="card-content">
-    <%= render "_form.html", conn: @conn, path: Routes.project_path(@conn, :update, @changeset.data), changeset: @changeset, projects: @projects, submit: "Opslaan" %>
+    <%= render "_form.html", conn: @conn, path: ~p"/projects/#{@changeset.data}", changeset: @changeset, projects: @projects, submit: "Opslaan" %>
   </div>
 </div>

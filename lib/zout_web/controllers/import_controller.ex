@@ -4,7 +4,6 @@ defmodule ZoutWeb.ImportController do
   action_fallback ZoutWeb.FallbackController
 
   alias Zout.Data
-  alias Zout.Data.Project
   alias ZoutWeb.Auth.Guardian
 
   def index(conn, params) do
@@ -23,7 +22,7 @@ defmodule ZoutWeb.ImportController do
       {:ok, _} ->
         conn
         |> put_flash(:info, "Import geslaagd.")
-        |> redirect(to: Routes.project_path(conn, :index))
+        |> redirect(to: ~p"/projects")
 
       {:error, e} ->
         conn

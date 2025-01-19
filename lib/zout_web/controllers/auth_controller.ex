@@ -30,19 +30,19 @@ defmodule ZoutWeb.AuthController do
     end
   end
 
-  def callback(%{assigns: %{ueberauth_failure: fails}} = conn, params) do
+  def callback(%{assigns: %{ueberauth_failure: fails}} = conn, _params) do
     # do things with the failure
     IO.inspect("FAILURE")
     IO.inspect(fails)
     render(conn, "no")
   end
 
-  def callback(%{assigns: %{ueberauth_auth: auth}} = conn, params) do
+  def callback(%{assigns: %{ueberauth_auth: auth}} = conn, _params) do
     user = Accounts.update_or_create!(auth)
 
     redirect_url =
       case get_session(conn, :after_login_redirect) do
-        nil -> Routes.page_path(conn, :index)
+        nil -> ~p"/"
         url -> url
       end
 
@@ -54,14 +54,14 @@ defmodule ZoutWeb.AuthController do
   def logout(conn, _) do
     conn
     |> Guardian.Plug.sign_out()
-    |> redirect(to: Routes.project_path(conn, :index))
+    |> redirect(to: ~p"/projects")
   end
 
   @impl true
   def auth_error(conn, {:unauthenticated, reason}, _opts) do
     IO.inspect("Unauthenticated due to")
     IO.inspect(reason)
-    redirect(conn, to: Routes.auth_path(conn, :request, :zeus, %{from: current_path(conn)}))
+    redirect(conn, to: ~p"/auth/zeus?from=#{current_path(conn)}")
   end
 
   # Handle invalid tokens. This error needs special attention: if we do nothing,
@@ -74,7 +74,7 @@ defmodule ZoutWeb.AuthController do
     conn
     |> Guardian.Plug.sign_out()
     |> put_flash(:error, "Ongeldige token, meld opnieuw aan.")
-    |> redirect(to: Routes.project_path(conn, :index))
+    |> redirect(to: ~p"/projects")
   end
 
   @impl true

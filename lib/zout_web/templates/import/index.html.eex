@@ -30,7 +30,7 @@
 </div>
 <div class="card">
   <div class="card-content">
-    <%= form_for @conn, Routes.import_path(@conn, :import), [as: :import], fn f -> %>
+    <%= form_for @conn, ~p"/import", [as: :import], fn f -> %>
       <div>
         <div class="field">
           <%= label(f, :contents, "Inhoud DOT-bestand*", class: "label") %>

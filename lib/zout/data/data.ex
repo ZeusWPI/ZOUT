@@ -73,7 +73,7 @@ defmodule Zout.Data do
   @doc """
   Deletes a Project.
   """
-  def delete_project(%Project{} = project) do
+  def delete_project(%Project{} = _project) do
     raise "TODO"
   end
 
@@ -145,7 +145,7 @@ defmodule Zout.Data do
   This will consolidate the new ping with the existing ping, to only save intervals,
   to prevent ballooning the storage and processing requirements.
   """
-  def handle_check_result(%Project{id: id}, {status, message, response_time}) do
+  def handle_check_result(%Project{id: id}, {status, message, _response_time}) do
     # Get the latest ping.
     # This should not be nil, unless this is the very first ping for a project.
     existing_ping =
@@ -251,15 +251,15 @@ defmodule Zout.Data do
   """
   @spec import(Dotx.graph()) :: {:ok, []} | {:error, any()}
   def import(graph) do
-    {nodes, graphs} = Dotx.to_nodes(graph)
+    {nodes, _graphs} = Dotx.to_nodes(graph)
 
     # Run this whole thing in a transaction.
     Repo.transaction(fn ->
       # Insert or find all projects, in a map of slug -> project.
       project_map =
-        Map.new(nodes, fn {[id | _], node} ->
+        Map.new(nodes, fn {[id | _], _node} ->
           # Check if we can find an existing node.
-          {:ok, slug} = EctoFields.Slug.cast(id)
+          {:ok, _slug} = EctoFields.Slug.cast(id)
 
           project =
             case get_project_by_slug(id) do
@@ -279,7 +279,7 @@ defmodule Zout.Data do
       all_ids_in_file = Enum.map(project_map, fn {_, %Project{id: id}} -> id end)
 
       # Insert all dependencies.
-      Enum.each(nodes, fn {[id | _], node = %Dotx.Node{attrs: %{"edges_from" => edges}}} ->
+      Enum.each(nodes, fn {[id | _], %Dotx.Node{attrs: %{"edges_from" => edges}}} ->
         this_project = Map.get(project_map, id)
 
         dependencies =

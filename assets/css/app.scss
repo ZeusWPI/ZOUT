@@ -1,5 +1,7 @@
 /* This file is for your main application CSS */
-@import "./tap.scss";
+@use "./tap";
+
+@use "bulma/sass" as bulma;
 
 p {
   max-width: 700px;
@@ -18,7 +20,7 @@ p {
 .visavail .subchart-xAxis text,
 .visavail .legend
 {
-  font-family: $body-family;
+  font-family: bulma.$body-family;
 }
 
 // Colours in the graph

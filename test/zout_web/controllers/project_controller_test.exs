@@ -6,7 +6,7 @@ defmodule ZoutWeb.ProjectControllerTest do
       project1 = insert(:project)
       project2 = insert(:project)
       project3 = insert(:project, deleted: true)
-      conn = get(conn, Routes.project_path(conn, :index))
+      conn = get(conn, ~p"/projects")
       assert html_response(conn, 200) =~ project1.name
       assert html_response(conn, 200) =~ project2.name
       refute html_response(conn, 200) =~ project3.name
@@ -17,7 +17,7 @@ defmodule ZoutWeb.ProjectControllerTest do
     test "renders form for admins", %{conn: conn} do
       admin = insert(:admin)
       conn = login(conn, admin)
-      conn = get(conn, Routes.project_path(conn, :new))
+      conn = get(conn, ~p"/projects/new")
       assert html_response(conn, 200) =~ "Nieuw project"
     end
 
@@ -26,13 +26,13 @@ defmodule ZoutWeb.ProjectControllerTest do
       conn = login(conn, user)
 
       assert_raise Bodyguard.NotAuthorizedError, fn ->
-        get(conn, Routes.project_path(conn, :new))
+        get(conn, ~p"/projects/new")
       end
     end
 
     test "does not render form for non-users", %{conn: conn} do
       assert_raise Bodyguard.NotAuthorizedError, fn ->
-        get(conn, Routes.project_path(conn, :new))
+        get(conn, ~p"/projects/new")
       end
     end
   end
@@ -46,14 +46,14 @@ defmodule ZoutWeb.ProjectControllerTest do
         "checker" => "hydra_api"
       }
 
-      conn = post(conn, Routes.project_path(conn, :create), project: valid_attrs)
+      conn = post(conn, ~p"/projects", project: valid_attrs)
 
-      assert redirected_to(conn) == Routes.project_path(conn, :index)
+      assert redirected_to(conn) == ~p"/projects"
     end
 
     test "renders errors when data is invalid", %{conn: conn} do
       conn = login(conn, insert(:admin))
-      conn = post(conn, Routes.project_path(conn, :create), project: %{})
+      conn = post(conn, ~p"/projects", project: %{})
       assert html_response(conn, 422) =~ "Nieuw project"
     end
 
@@ -66,7 +66,7 @@ defmodule ZoutWeb.ProjectControllerTest do
       }
 
       assert_raise Bodyguard.NotAuthorizedError, fn ->
-        post(conn, Routes.project_path(conn, :create), project: valid_attrs)
+        post(conn, ~p"/projects", project: valid_attrs)
       end
     end
 
@@ -77,7 +77,7 @@ defmodule ZoutWeb.ProjectControllerTest do
       }
 
       assert_raise Bodyguard.NotAuthorizedError, fn ->
-        post(conn, Routes.project_path(conn, :create), project: valid_attrs)
+        post(conn, ~p"/projects", project: valid_attrs)
       end
     end
   end
@@ -87,7 +87,7 @@ defmodule ZoutWeb.ProjectControllerTest do
       project = insert(:project)
       admin = insert(:admin)
       conn = login(conn, admin)
-      conn = get(conn, Routes.project_path(conn, :edit, project))
+      conn = get(conn, ~p"/projects/#{project}/edit")
       assert html_response(conn, 200) =~ "#{project.name} bewerken"
     end
 
@@ -97,7 +97,7 @@ defmodule ZoutWeb.ProjectControllerTest do
       conn = login(conn, user)
 
       assert_raise Bodyguard.NotAuthorizedError, fn ->
-        get(conn, Routes.project_path(conn, :edit, project))
+        get(conn, ~p"/projects/#{project}/edit")
       end
     end
 
@@ -105,7 +105,7 @@ defmodule ZoutWeb.ProjectControllerTest do
       project = insert(:project)
 
       assert_raise Bodyguard.NotAuthorizedError, fn ->
-        get(conn, Routes.project_path(conn, :edit, project))
+        get(conn, ~p"/projects/#{project}/edit")
       end
     end
   end
@@ -119,9 +119,9 @@ defmodule ZoutWeb.ProjectControllerTest do
 
       project = insert(:project)
       conn = login(conn, insert(:admin))
-      conn = patch(conn, Routes.project_path(conn, :update, project), project: valid_attrs)
+      conn = patch(conn, ~p"/projects/#{project}", project: valid_attrs)
 
-      assert redirected_to(conn) == Routes.project_path(conn, :show, project)
+      assert redirected_to(conn) == ~p"/projects/#{project}"
     end
 
     test "renders errors when data is invalid", %{conn: conn} do
@@ -131,7 +131,7 @@ defmodule ZoutWeb.ProjectControllerTest do
 
       project = insert(:project)
       conn = login(conn, insert(:admin))
-      conn = patch(conn, Routes.project_path(conn, :update, project), project: attrs)
+      conn = patch(conn, ~p"/projects/#{project}", project: attrs)
       assert html_response(conn, 422) =~ "#{project.name} bewerken"
     end
 
@@ -145,7 +145,7 @@ defmodule ZoutWeb.ProjectControllerTest do
       conn = login(conn, insert(:user))
 
       assert_raise Bodyguard.NotAuthorizedError, fn ->
-        patch(conn, Routes.project_path(conn, :update, project), project: valid_attrs)
+        patch(conn, ~p"/projects/#{project}", project: valid_attrs)
       end
     end
 
@@ -158,7 +158,7 @@ defmodule ZoutWeb.ProjectControllerTest do
       project = insert(:project)
 
       assert_raise Bodyguard.NotAuthorizedError, fn ->
-        patch(conn, Routes.project_path(conn, :update, project), project: valid_attrs)
+        patch(conn, ~p"/projects/#{project}", project: valid_attrs)
       end
     end
   end

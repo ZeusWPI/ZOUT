@@ -10,12 +10,12 @@ defmodule Zout.Checker.Unchecked do
   def identifier(), do: :unchecked
 
   @impl true
-  def check(params) do
+  def check(_params) do
     {:unchecked, nil, nil}
   end
 
   @impl true
-  def changeset(changeset, attrs) do
+  def changeset(changeset, _attrs) do
     put_change(changeset, :params, %{})
   end
 end

@@ -9,19 +9,19 @@
   <tbody>
   <%= for %{ project: project, ping: ping } <- @projects_and_pings do %>
     <tr>
-      <td class="order-item-info"><%= link project.name, to: Routes.project_path(@conn, :show, project) %></td>
+      <td class="order-item-info"><%= link project.name, to: ~p"/projects/#{project}" %></td>
       <td>
         <%= if is_nil(ping) do %>
           <%= render_status(ping) %>
         <% else %>
-          <%= link to: Routes.ping_path(@conn, :show, Data.get_ping_id(ping)) do %>
+          <%= link to: ~p"/pings/#{Data.get_ping_id(ping)}" do %>
             <%= render_status(ping) %>
           <% end %>
         <% end %>
       </td>
       <td>
         <%= if can?(@conn, :project_edit, project) do %>
-          <%= link "Bewerken", to: Routes.project_path(@conn, :edit, project) %>
+          <%= link "Bewerken", to: ~p"/projects/#{project}/edit" %>
         <% end %>
       </td>
     </tr>
@@ -32,7 +32,7 @@
   <div class="is-flex is-justify-content-space-between is-align-content-center">
     <span class="mt-4">Laatst gecontroleerd: <%= last_checked(@projects_and_pings) |> FormatHelpers.human_datetime() %></span>
     <%= if can?(@conn, :project_new) do %>
-      <%= link "Nieuw project", to: Routes.project_path(@conn, :new), class: "button is-primary" %>
+      <%= link "Nieuw project", to: ~p"/projects/new", class: "button is-primary" %>
     <% end %>
   </div>
 </div>

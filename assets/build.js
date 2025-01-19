@@ -1,7 +1,7 @@
 // File adapted from https://hexdocs.pm/phoenix/asset_management.html#esbuild-plugins
 
-const esbuild = require('esbuild');
-const { sassPlugin } = require('esbuild-sass-plugin');
+import esbuild from 'esbuild';
+import { sassPlugin } from 'esbuild-sass-plugin';
 
 const args = process.argv.slice(2);
 const watch = args.includes('--watch');
@@ -34,7 +34,6 @@ let opts = {
 if (watch) {
   opts = {
     ...opts,
-    watch,
     sourcemap: 'inline'
   };
 }
@@ -46,14 +45,19 @@ if (deploy) {
   };
 }
 
-const promise = esbuild.build(opts);
-
 if (watch) {
-  promise.then(_result => {
-    process.stdin.on('close', () => {
-      process.exit(0);
+  opts = {
+    ...opts,
+    sourcemap: "inline",
+  };
+  esbuild
+    .context(opts)
+    .then(async (ctx) => {
+      await ctx.watch();
+    })
+    .catch((_error) => {
+      process.exit(1);
     });
-
-    process.stdin.resume();
-  });
+} else {
+  await esbuild.build(opts);
 }

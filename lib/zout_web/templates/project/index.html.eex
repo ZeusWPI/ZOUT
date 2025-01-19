@@ -9,13 +9,13 @@
     <div class="tabs is-toggle">
       <ul>
         <li class="<%= if @format == :table, do: "is-active", else: "" %>">
-          <%= link "Tabel", to: Routes.project_path(@conn, :index, format: "table") %>
+          <%= link "Tabel", to: ~p"/projects?format=table" %>
         </li>
         <li class="<%= if @format == :avail, do: "is-active", else: "" %>">
-          <%= link "Overzichtsgrafiek", to: Routes.project_path(@conn, :index, format: "avail") %>
+          <%= link "Overzichtsgrafiek", to: ~p"/projects?format=avail" %>
         </li>
         <li class="<%= if @format == :graph, do: "is-active", else: "" %>">
-          <%= link "Graaf", to: Routes.project_path(@conn, :index, format: "graph") %>
+          <%= link "Graaf", to: ~p"/projects?format=graph" %>
         </li>
       </ul>
     </div>
