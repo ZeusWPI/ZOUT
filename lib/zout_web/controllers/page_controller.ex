@@ -3,7 +3,7 @@ defmodule ZoutWeb.PageController do
 
   def index(conn, _params) do
     # TODO, do something useful here.
-    redirect(conn, to: Routes.project_path(conn, :index))
+    redirect(conn, to: ~p"/projects")
   end
 
   def crash(conn, _params) do

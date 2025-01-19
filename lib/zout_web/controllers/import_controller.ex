@@ -22,7 +22,7 @@ defmodule ZoutWeb.ImportController do
       {:ok, _} ->
         conn
         |> put_flash(:info, "Import geslaagd.")
-        |> redirect(to: Routes.project_path(conn, :index))
+        |> redirect(to: ~p"/projects")
 
       {:error, e} ->
         conn

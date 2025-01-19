@@ -10,34 +10,33 @@
         <span aria-hidden="true"></span>
       </a>
     </div>
-
-    <!-- Menu -->
+    
+<!-- Menu -->
     <div class="navbar-menu">
-
       <div class="navbar-start">
         <span class="navbar-item">
           <small>Het Zeus Overzicht met Uitgebreide Toestanden</small>
-         </span>
+        </span>
       </div>
 
       <div class="navbar-end">
         <% user = Guardian.Plug.current_resource(@conn) %>
-        <%= link "Overzicht", to: Routes.project_path(@conn, :index), class: "navbar-item" %>
+        {link("Overzicht", to: ~p"/projects", class: "navbar-item")}
 
         <%= if Bodyguard.permit?(Data.Policy, :project_import, user) do %>
-          <%= link "Import", to: Routes.import_path(@conn, :index), class: "navbar-item" %>
+          {link("Import", to: ~p"/import", class: "navbar-item")}
         <% end %>
-
-        <!-- User -->
+        
+<!-- User -->
         <%= if is_nil(user) do %>
-          <%= link "Aanmelden met Zeus", to: Routes.auth_path(@conn, :request, :zeus), class: "navbar-item" %>
+          {link("Aanmelden met Zeus", to: ~p"/auth/zeus", class: "navbar-item")}
         <% else %>
           <div class="navbar-item has-dropdown is-hoverable">
             <a class="navbar-link">
-              <%= user.nickname %>
+              {user.nickname}
             </a>
             <div class="navbar-dropdown is-boxed">
-              <%= link "Afmelden", to: Routes.auth_path(@conn, :logout), method: :post, class: "navbar-item" %>
+              {link("Afmelden", to: ~p"/auth/logout", method: :post, class: "navbar-item")}
             </div>
           </div>
         <% end %>

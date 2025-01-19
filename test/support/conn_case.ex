@@ -25,10 +25,10 @@ defmodule ZoutWeb.ConnCase do
       import ZoutWeb.ConnCase
       import Zout.Factory
 
-      alias ZoutWeb.Router.Helpers, as: Routes
-
       # The default endpoint for testing
       @endpoint ZoutWeb.Endpoint
+
+      use ZoutWeb, :verified_routes
 
       @doc """
       Log the user in by putting the data in the conn.

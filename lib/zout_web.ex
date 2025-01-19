@@ -16,6 +16,7 @@ defmodule ZoutWeb do
   below. Instead, define any helper function in modules
   and import those modules here.
   """
+  def static_paths, do: ~w(assets fonts images favicon.ico robots.txt)
 
   def controller do
     quote do
@@ -23,7 +24,8 @@ defmodule ZoutWeb do
 
       import Plug.Conn
       use Gettext, backend: ZoutWeb.Gettext
-      alias ZoutWeb.Router.Helpers, as: Routes
+
+      unquote(verified_routes())
     end
   end
 
@@ -99,7 +101,8 @@ defmodule ZoutWeb do
 
       import ZoutWeb.ErrorHelpers
       use Gettext, backend: ZoutWeb.Gettext
-      alias ZoutWeb.Router.Helpers, as: Routes
+
+      unquote(verified_routes())
     end
   end
 
@@ -108,5 +111,14 @@ defmodule ZoutWeb do
   """
   defmacro __using__(which) when is_atom(which) do
     apply(__MODULE__, which, [])
+  end
+
+  def verified_routes do
+    quote do
+      use Phoenix.VerifiedRoutes,
+        endpoint: ZoutWeb.Endpoint,
+        router: ZoutWeb.Router,
+        statics: ZoutWeb.static_paths()
+    end
   end
 end

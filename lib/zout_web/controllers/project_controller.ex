@@ -68,7 +68,7 @@ defmodule ZoutWeb.ProjectController do
     case Data.create_project(params) do
       {:ok, _project} ->
         conn
-        |> redirect(to: Routes.project_path(conn, :index))
+        |> redirect(to: ~p"/projects")
 
       {:error, changeset} ->
         projects = Data.list_projects()
@@ -96,7 +96,7 @@ defmodule ZoutWeb.ProjectController do
 
     case Data.update_project(project, params) do
       {:ok, project} ->
-        redirect(conn, to: Routes.project_path(conn, :show, project))
+        redirect(conn, to: ~p"/projects/#{project}")
 
       {:error, changeset} ->
         projects = Data.list_projects()
