@@ -47,10 +47,8 @@ defmodule Zout.Checker.HydraApi do
 
     Logger.info("Doing Hydra check on #{url}")
 
-    request = Finch.build(:get, url)
-
-    case Finch.request(request, ZoutFinch) do
-      {:ok, %Finch.Response{status: 200, body: body}} -> check_api_date(body)
+    case Req.get(url, finch: ZoutFinch, max_retries: 2) do
+      {:ok, %Req.Response{status: 200, body: body}} -> check_api_date(body)
       {:ok, _} -> {:failing, nil, nil}
       _ -> {:offline, nil, nil}
     end
