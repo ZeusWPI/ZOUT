@@ -20,7 +20,7 @@ defmodule Zout.CheckerTest do
 
     test "ok", %{bypass: bypass} do
       for http_code <- [200, 202, 203, 204, 206] do
-        Bypass.expect_once(bypass, "GET", "/ok", fn conn ->
+        Bypass.expect_once(bypass, "HEAD", "/ok", fn conn ->
           Plug.Conn.resp(conn, http_code, ~s<>)
         end)
 
@@ -31,7 +31,7 @@ defmodule Zout.CheckerTest do
 
     test "failing", %{bypass: bypass} do
       for http_code <- [400, 404, 500] do
-        Bypass.expect_once(bypass, "GET", "/failing", fn conn ->
+        Bypass.expect(bypass, "HEAD", "/failing", fn conn ->
           Plug.Conn.resp(conn, http_code, ~s<>)
         end)
 
@@ -100,7 +100,7 @@ defmodule Zout.CheckerTest do
 
     test "failing http", %{bypass: bypass} do
       for http_code <- [400, 404, 500] do
-        Bypass.expect_once(bypass, "GET", "/failing", fn conn ->
+        Bypass.expect(bypass, "GET", "/failing", fn conn ->
           Plug.Conn.resp(conn, http_code, ~s<>)
         end)
 

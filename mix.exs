@@ -68,7 +68,7 @@ defmodule Zout.MixProject do
       {:jason, "~> 1.2"},
       {:plug_cowboy, "~> 2.5"},
       {:ecto_fields, "~> 1.3.0"},
-      {:finch, "~> 0.12"},
+      {:req, "~> 0.5"},
       {:quantum, "~> 3.0"},
       {:ueberauth, "~> 0.7"},
       {:oauth2, "~> 2.0"},

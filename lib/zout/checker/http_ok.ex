@@ -33,14 +33,12 @@ defmodule Zout.Checker.HttpOk do
 
     Logger.info("Doing HTTP/200 check on #{url}")
 
-    request = Finch.build(:get, url)
-
-    case Finch.request(request, ZoutFinch) do
-      {:ok, %Finch.Response{status: 200}} -> {:working, nil, nil}
-      {:ok, %Finch.Response{status: 202}} -> {:working, nil, nil}
-      {:ok, %Finch.Response{status: 203}} -> {:working, nil, nil}
-      {:ok, %Finch.Response{status: 204}} -> {:working, nil, nil}
-      {:ok, %Finch.Response{status: 206}} -> {:working, nil, nil}
+    case Req.head(url, finch: ZoutFinch, max_retries: 2) do
+      {:ok, %Req.Response{status: 200}} -> {:working, nil, nil}
+      {:ok, %Req.Response{status: 202}} -> {:working, nil, nil}
+      {:ok, %Req.Response{status: 203}} -> {:working, nil, nil}
+      {:ok, %Req.Response{status: 204}} -> {:working, nil, nil}
+      {:ok, %Req.Response{status: 206}} -> {:working, nil, nil}
       {:ok, _} -> {:failing, nil, nil}
       _ -> {:offline, nil, nil}
     end
