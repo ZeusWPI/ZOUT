@@ -25,8 +25,8 @@ defmodule ZoutWeb.Auth.OAuthStrategy do
 
   @defaults [
     strategy: __MODULE__,
-    site: "https://adams.ugent.be",
-    token_url: "https://adams.ugent.be/oauth/oauth2/token",
+    site: "https://zauth.zeus.gent",
+    token_url: "https://zauth.zeus.gent/oauth/token",
     redirect_uri: "https://zout.zeus.gent/auth/zeus/callback"
   ]
 

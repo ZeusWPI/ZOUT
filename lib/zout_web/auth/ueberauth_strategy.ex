@@ -84,7 +84,7 @@ defmodule ZoutWeb.Auth.UeberauthStrategy do
   end
 
   defp fetch_user(conn, client) do
-    case OAuth2.Client.get(client, "/oauth/api/current_user") do
+    case OAuth2.Client.get(client, "/current_user") do
       {:ok, %OAuth2.Response{status_code: 401, body: _body}} ->
         set_errors!(conn, [error("token", "unauthorized")])
 
