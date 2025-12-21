@@ -67,10 +67,11 @@ defmodule Zout.MixProject do
       {:phoenix_live_dashboard, "~> 0.7"},
       {:esbuild, "~> 0.4", runtime: Mix.env() == :dev},
       {:swoosh, "~> 1.3"},
-      {:sentry, "~> 10.1"},
+      {:sentry, "~> 11.0"},
       {:telemetry_metrics, "~> 1.0"},
       {:telemetry_poller, "~> 1.0"},
-      {:gettext, "~> 0.18"},
+      # Override Timex, there are no breaking changes here.
+      {:gettext, "~> 1.0", override: true},
       {:jason, "~> 1.2"},
       {:plug_cowboy, "~> 2.5"},
       {:ecto_fields, "~> 1.3.0"},
