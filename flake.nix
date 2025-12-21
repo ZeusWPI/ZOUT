@@ -23,11 +23,11 @@
             packages = [
               pkgs.ffmpeg
               pkgs.nixpkgs-fmt
-              pkgs.erlang_27
-              pkgs.elixir_1_18
+              pkgs.erlang_28
+              pkgs.elixir_1_19
               (pkgs.postgresql_17.withPackages (p: [ p.timescaledb ]))
               pkgs.inotify-tools
-              pkgs.nodejs_22
+              pkgs.nodejs_24
               pkgs.docker-compose
             ];
             env = [

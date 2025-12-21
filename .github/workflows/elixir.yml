@@ -34,8 +34,8 @@ jobs:
       - name: Set up Elixir
         uses: erlef/setup-beam@8aa8a857c6be0daae6e97272bb299d5b942675a4
         with:
-          elixir-version: '1.18.1'
-          otp-version: '27'
+          elixir-version: '1.19'
+          otp-version: '28'
       - name: Restore dependencies cache
         uses: actions/cache@v4
         with:
@@ -57,8 +57,8 @@ jobs:
       - name: Set up Elixir
         uses: erlef/setup-beam@8aa8a857c6be0daae6e97272bb299d5b942675a4
         with:
-          elixir-version: '1.18.1'
-          otp-version: '27'
+          elixir-version: '1.19'
+          otp-version: '28'
       - name: Restore dependencies cache
         uses: actions/cache@v4
         with:
@@ -77,8 +77,8 @@ jobs:
       - name: Set up Elixir
         uses: erlef/setup-beam@8aa8a857c6be0daae6e97272bb299d5b942675a4
         with:
-          elixir-version: '1.18.1'
-          otp-version: '27'
+          elixir-version: '1.19'
+          otp-version: '28'
       - name: Restore dependencies cache
         uses: actions/cache@v4
         with:
