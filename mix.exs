@@ -30,7 +30,7 @@ defmodule Zout.MixProject do
         "coveralls.detail": :test,
         "coveralls.post": :test,
         "coveralls.html": :test
-      ],
+      ]
     ]
   end
 
