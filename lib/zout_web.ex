@@ -20,7 +20,7 @@ defmodule ZoutWeb do
 
   def controller do
     quote do
-      use Phoenix.Controller, namespace: ZoutWeb
+      use Phoenix.Controller, formats: [html: "View", json: "View"]
 
       import Plug.Conn
       use Gettext, backend: ZoutWeb.Gettext
