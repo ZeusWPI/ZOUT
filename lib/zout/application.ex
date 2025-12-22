@@ -7,6 +7,8 @@ defmodule Zout.Application do
 
   @impl true
   def start(_type, _args) do
+    Logger.add_handlers(:zout)
+
     children = [
       # Start PromEx
       Zout.PromEx,

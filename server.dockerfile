@@ -31,25 +31,25 @@ RUN mix deps.compile
 # copy stuff
 COPY priv priv
 COPY lib lib
+
+# Compile the release
+RUN mix compile
+
 COPY assets assets
 
-# node dependencies
-RUN cd assets && npm ci
-
 # compile assets
+RUN mix assets.setup
 RUN mix assets.deploy
-
-# compile the release
-RUN mix compile
 
 # Changes to config/runtime.exs don't require recompiling the code
 COPY config/runtime.exs config/
 
 COPY rel rel
+RUN mix sentry.package_source_code
 RUN mix release
 
 # app stage
-FROM alpine:3.21 AS app
+FROM alpine:3.23 AS app
 
 # install runtime dependencies
 RUN apk add --no-cache libstdc++ openssl ncurses-libs musl-locales

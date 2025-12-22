@@ -48,5 +48,14 @@ config :logger, level: :info
 #
 # Check `Plug.SSL` for all available options in `force_ssl`.
 
-config :logger,
-  backends: [:console, Sentry.LoggerBackend]
+config :zout, :logger, [
+  {:handler, :sentry_handler, Sentry.LoggerHandler, %{
+    config: %{
+      metadata: [:file, :line],
+      rate_limiting: [max_events: 10, interval: _1_second = 1_000],
+      # Logs all messages with level `:error` and above to Sentry.
+      capture_log_messages: true,
+      level: :error
+    }
+  }}
+]
