@@ -9,15 +9,18 @@ defmodule Zout.Accounts do
   def update_or_create!(%Ueberauth.Auth{
         uid: id,
         info: info,
-        extra: %Ueberauth.Auth.Extra{raw_info: %{admin: admin}}
+        extra: %Ueberauth.Auth.Extra{raw_info: %{admin: admin, roles: roles}}
       }) do
+
+    is_zout_admin = admin || Enum.member?(roles, "bestuur")
+
     case Repo.get(User, id) do
       nil -> %User{id: id}
       user -> user
     end
     |> User.changeset(%{
       nickname: info.nickname,
-      admin: admin
+      admin: is_zout_admin
     })
     |> Repo.insert_or_update!()
   end
