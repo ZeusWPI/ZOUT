@@ -45,7 +45,7 @@ defmodule Zout.Checker.HydraApi do
   def check(params \\ %{}) do
     url = Map.get(params, "url", "https://hydra.ugent.be/api/2.0/")
 
-    Logger.info("Doing Hydra check on #{url}")
+    Logger.debug("Doing Hydra check on #{url}")
 
     case Req.get(url, finch: ZoutFinch, max_retries: 2) do
       {:ok, %Req.Response{status: 200, body: body}} -> check_api_date(body)

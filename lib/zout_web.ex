@@ -20,7 +20,7 @@ defmodule ZoutWeb do
 
   def controller do
     quote do
-      use Phoenix.Controller, namespace: ZoutWeb
+      use Phoenix.Controller, formats: [html: "View", json: "View"]
 
       import Plug.Conn
       use Gettext, backend: ZoutWeb.Gettext
@@ -94,7 +94,7 @@ defmodule ZoutWeb do
       use PhoenixHTMLHelpers
 
       # Import LiveView and .heex helpers (live_render, live_patch, <.form>, etc)
-      import Phoenix.LiveView.Helpers
+      import Phoenix.Component
 
       # Import basic rendering functionality (render, render_layout, etc)
       import Phoenix.View

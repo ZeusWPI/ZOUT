@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+#
+# Part of the deployment process. Executes on the deployment server.
+#
+# Alternatively, run this yourself on the server.
+
+set -euo pipefail
+
+# Go to the application directory
+cd ZOUT
+
+# Check that the repo is clean.
+if [ -n "$(git status --porcelain)" ]; then
+  echo "Git repo on server is not clean! Fix it!"
+  exit 1
+fi
+
+# Get the latest versions
+git pull
+
+# Build the new Docker files
+podman-compose build
+
+# Start the server
+podman-compose up -d
+
+echo "Container started. Waiting for initialization..."
+sleep 10
+
+echo "--- STARTUP LOGS ---"
+podman-compose logs --tail=50
+
+if [ -z "$(podman ps --format "{{.Names}}" | grep "zout_zout")" ]; then
+  echo "❌ The 'zout' container died during startup!"
+  exit 1
+fi
+
+echo "✅ Deployment Successful!"

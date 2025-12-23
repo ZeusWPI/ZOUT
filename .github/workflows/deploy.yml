@@ -1,0 +1,24 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Add SSH key
+        uses: webfactory/ssh-agent@v0.9.1
+        with:
+          ssh-private-key: ${{ secrets.DEPLOY_KEY }}
+
+      - name: Add known hosts
+        run: ssh-keyscan -p 2222 -H pratchett.ugent.be >> ~/.ssh/known_hosts
+
+      - name: Run deployment on server
+        run: |
+          ssh -p 2222 zout@pratchett.ugent.be 'bash -s' < ./deploy.ssh

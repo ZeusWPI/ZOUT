@@ -156,13 +156,13 @@ defmodule Zout.Data do
 
     now = DateTime.utc_now() |> DateTime.truncate(:second)
 
-    Logger.info("Handling check result for project #{id} (#{status})")
-    Logger.info("Existing ping: #{inspect(existing_ping)}")
+    Logger.debug("Handling check result for project #{id} (#{status})")
+    Logger.debug("Existing ping: #{inspect(existing_ping)}")
 
     # If we don't have an existing ping or it is not of the same status,
     # begin a new interval.
     if is_nil(existing_ping) or existing_ping.status != status do
-      Logger.info("Starting new ping interval")
+      Logger.debug("Starting new ping interval")
 
       # Prevent multiple pings with the same end point.
       stop = now |> Timex.shift(seconds: 1) |> DateTime.truncate(:second)
@@ -176,16 +176,16 @@ defmodule Zout.Data do
       })
 
       unless is_nil(existing_ping) do
-        Logger.info("Stopping existing ping interval")
+        Logger.debug("Stopping existing ping interval")
 
         result =
           Ecto.Changeset.change(existing_ping, stop: now)
           |> Repo.update!()
 
-        Logger.info("Updated old ping: #{inspect(result)}")
+        Logger.debug("Updated old ping: #{inspect(result)}")
       end
     else
-      Logger.info("Updating existing ping interval")
+      Logger.debug("Updating existing ping interval")
 
       changeset =
         Ecto.Changeset.change(existing_ping,
@@ -194,7 +194,7 @@ defmodule Zout.Data do
         )
 
       result = Repo.update!(changeset)
-      Logger.info("Updated ping: #{inspect(result)}")
+      Logger.debug("Updated ping: #{inspect(result)}")
     end
   end
 
@@ -221,9 +221,9 @@ defmodule Zout.Data do
 
     Enum.each(projects, fn project ->
       check_module = Checker.checker(project.checker)
-      Logger.info("Checking #{project.name} with #{check_module}")
+      Logger.debug("Checking #{project.name} with #{check_module}")
       result = check_module.check(project.params)
-      Logger.info("Result: #{inspect(result)}")
+      Logger.debug("Result: #{inspect(result)}")
       handle_check_result(project, result)
       emit_event(project, result)
     end)

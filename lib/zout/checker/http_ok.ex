@@ -31,7 +31,7 @@ defmodule Zout.Checker.HttpOk do
   def check(params) do
     url = params["url"]
 
-    Logger.info("Doing HTTP/200 check on #{url}")
+    Logger.debug("Doing HTTP/200 check on #{url}")
 
     case Req.head(url, finch: ZoutFinch, max_retries: 2) do
       {:ok, %Req.Response{status: 200}} -> {:working, nil, nil}
