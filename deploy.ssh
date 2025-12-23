@@ -22,7 +22,7 @@ git pull
 podman-compose build
 
 # Start the server
-podman-compose up -d
+podman-compose up --force-recreate -d
 
 echo "Container started. Waiting for initialization..."
 sleep 10
