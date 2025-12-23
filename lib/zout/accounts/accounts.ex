@@ -11,7 +11,6 @@ defmodule Zout.Accounts do
         info: info,
         extra: %Ueberauth.Auth.Extra{raw_info: %{admin: admin, roles: roles}}
       }) do
-
     is_zout_admin = admin || Enum.member?(roles, "bestuur")
 
     case Repo.get(User, id) do
