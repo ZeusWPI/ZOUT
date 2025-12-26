@@ -9,9 +9,12 @@ defmodule Zout.Accounts do
   def update_or_create!(%Ueberauth.Auth{
         uid: id,
         info: info,
-        extra: %Ueberauth.Auth.Extra{raw_info: %{admin: admin, roles: roles}}
+        extra: %Ueberauth.Auth.Extra{raw_info: %{admin: zauth_admin, roles: roles}}
       }) do
-    is_zout_admin = admin || Enum.member?(roles, "bestuur")
+    user_roles = MapSet.new(roles)
+    has_admin_role = MapSet.intersection(admin_roles(), user_roles) |> Enum.empty?()
+
+    is_zout_admin = zauth_admin || has_admin_role
 
     case Repo.get(User, id) do
       nil -> %User{id: id}
@@ -28,4 +31,6 @@ defmodule Zout.Accounts do
   Get the user with the given ID.
   """
   def get_user(id), do: Repo.get(User, id)
+
+  defp admin_roles(), do: MapSet.new(["bestuur", "zout_admin"])
 end
