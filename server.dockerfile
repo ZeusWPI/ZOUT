@@ -1,4 +1,4 @@
-FROM elixir:1.19-alpine AS builder
+FROM docker.io/library/elixir:1.19-alpine AS builder
 
 # install build dependencies
 RUN apk add --no-cache npm
