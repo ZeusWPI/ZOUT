@@ -18,10 +18,10 @@
 (packages->manifest
  (pkgs (list (channel
                (inherit %default-guix-channel)
-               (commit "71ffb948b32b361d02ec0781e25f1e8f8f5aea75")))
+               (commit "f4d97180ea4fc468cb83e5ba35d9db392ea3a647")))
        (list "bash"
              "coreutils" "findutils" "sed" "grep"
-             "elixir@1.19" "erlang@27" "inotify-tools"
-             "pgcli"
+             "elixir@1.19" "erlang@28" "inotify-tools"
+             "postgresql@17" "pgcli"
              "node@22"
              "nss-certs")))
