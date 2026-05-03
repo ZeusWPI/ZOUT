@@ -16,7 +16,7 @@
     <%= unless is_nil(@project.source) do %>
       <li>
         <span class="icon"><i class="fa fa-code"></i></span>
-        <%= link "Broncode", to: @project.home %>
+        <%= link "Broncode", to: @project.source %>
       </li>
     <% end %>
   </ul>
