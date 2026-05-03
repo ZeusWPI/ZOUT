@@ -1,6 +1,6 @@
 # Zout [![Elixir CI](https://github.com/ZeusWPI/ZOUT/actions/workflows/elixir.yml/badge.svg)](https://github.com/ZeusWPI/ZOUT/actions/workflows/elixir.yml) [![Coverage Status](https://coveralls.io/repos/github/ZeusWPI/ZOUT/badge.svg?branch=master)](https://coveralls.io/github/ZeusWPI/ZOUT?branch=master)
 
-Het Zeus Overzicht met Uitgebreide Toestanden ("Zeus Overview with Extensive)
+Het Zeus Overzicht met Uitgebreide Toestanden ("Zeus Overview Using exTensive states")
 
 The aim of this project is to provide an "uptime monitor" for Zeus projects.
 Why use an existing solution, when you can build it yourself?
@@ -9,27 +9,69 @@ Anyway, this application is rather simple.
 It has a list of projects, for which it pings some URL every X time, and saves the result in a big PostgreSQL table (we use TimescaleDB, so we can save all the things).
 We then show this with a simple UI.
 
-## Installing dev environment
+## Setting up a dev environment
+
+> Note: Once the server runs, it will ping registered services every minute or so, so don't leave it running too long in the background.
+
+Combine any of the following:
+
+### Nix (everything)
 
 Enlightened people can use the nix flake.
-Others need to search how to install:
+
+After setting up the database, run the webserver as follows:
+
+```console
+mix setup
+mix phx.server
+```
+
+Now, visit [http://localhost:4000](http://localhost:4000)
+
+### Guix (everything except database)
+
+Slightly more enlightened people can run the webserver like this:
+
+```console
+guix shell -mmanifest.scm -CFN -ETERM -- sh -c "mix setup; mix phx.server"
+```
+
+Now, visit [http://localhost:4000](http://localhost:4000)
+
+### Others (everything except database)
+
+Install the following:
 
 - Elixir 1.19
-- PostgreSQL 17 with TimescaleDB extension
 - Node.js 24
 
-Then, to start your Phoenix server:
+Start the webserver:
 
-  * Install asset dependencies with `cd assets && npm install`
-  * Install dependencies with `mix deps.get`
-  * Create and migrate your database with `mix ecto.setup`
-  * Start Phoenix endpoint with `mix phx.server` or inside IEx with `iex -S mix phx.server`
+```console
+mix setup
+mix phx.server
+```
 
-Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
-Note that once the server runs, it will ping registered services every minute or so,
-so don't leave it running too long in the background.
+Now, visit [http://localhost:4000](http://localhost:4000)
+
+### Docker/Podman (database only)
+
+Start a development postgres, accessible on `postgresql://postgres:postgres@localhost` :
+
+```console
+podman compose -fdocker-compose.dev.yml up -d --build
+```
+
+### Others (database only)
+
+Set up a PostgreSQL 17 with the TimescaleDB extension.
+Make sure it's accessible on: `postgresql://postgres:postgres@localhost`
 
 ## Deployment
+
+> Note: This is done automatically upon pushing to master.
+>
+> See [workflows/deploy.yml](.github/workflows/deploy.yml) and [deploy.ssh](deploy.ssh).
 
 1. SSH to the server
 2. Pull the repo
@@ -37,7 +79,7 @@ so don't leave it running too long in the background.
 4. Build a new docker image with `podman-compose build`
 5. Start the application with `podman-compose up -d`
 
-## Learn more
+## Learn more about the Phoenix framework
 
   * Official website: https://www.phoenixframework.org/
   * Guides: https://hexdocs.pm/phoenix/overview.html

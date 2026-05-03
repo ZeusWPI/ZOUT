@@ -1,0 +1,14 @@
+services:
+  database:
+    image: docker.io/timescale/timescaledb:latest-pg17
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "127.0.0.1:5432:5432"
+    volumes:
+      - zout-dev-database:/var/lib/postgresql/data
+
+volumes:
+  zout-dev-database:
