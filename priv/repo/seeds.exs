@@ -12,22 +12,29 @@
 alias Zout.Repo
 alias Zout.Data.Project
 
-%Project{
-  name: "Zeus WPI",
-  slug: "zeus-site",
-  checker: :http_ok,
-  params: %{url: "https://zeus.ugent.be"},
-  inserted_at: NaiveDateTime.utc_now() |> NaiveDateTime.truncate(:second),
-  updated_at: NaiveDateTime.utc_now() |> NaiveDateTime.truncate(:second)
-}
-|> Repo.insert!()
+projects = [
+  %Project{
+    name: "Zeus WPI",
+    slug: "zeus-site",
+    checker: :http_ok,
+    params: %{url: "https://zeus.ugent.be"},
+    inserted_at: NaiveDateTime.utc_now() |> NaiveDateTime.truncate(:second),
+    updated_at: NaiveDateTime.utc_now() |> NaiveDateTime.truncate(:second)
+  },
+  %Project{
+    name: "Weus ZPI",
+    slug: "weus-site",
+    checker: :http_ok,
+    params: %{url: "https://weus.ugent.be"},
+    inserted_at: NaiveDateTime.utc_now() |> NaiveDateTime.truncate(:second),
+    updated_at: NaiveDateTime.utc_now() |> NaiveDateTime.truncate(:second)
+  }
+]
 
-%Project{
-  name: "Weus ZPI",
-  slug: "weus-site",
-  checker: :http_ok,
-  params: %{url: "https://weus.ugent.be"},
-  inserted_at: NaiveDateTime.utc_now() |> NaiveDateTime.truncate(:second),
-  updated_at: NaiveDateTime.utc_now() |> NaiveDateTime.truncate(:second)
-}
-|> Repo.insert!()
+projects
+|> Enum.map(fn el ->
+  if Repo.get_by(Project, name: el.name) === nil and
+       Repo.get_by(Project, slug: el.slug) === nil do
+    Repo.insert!(el)
+  end
+end)
