@@ -8,6 +8,7 @@ defmodule Zout.Data.Project do
   schema "projects" do
     field :name, :string
     field :slug, EctoFields.Slug
+    field :description, :string
     field :home, EctoFields.URL
     field :source, EctoFields.URL
     field :checker, Ecto.Enum, values: [:http_ok, :hydra_api, :unchecked]
@@ -43,7 +44,7 @@ defmodule Zout.Data.Project do
       end
 
     project
-    |> cast(attrs, [:name, :slug, :home, :source, :checker])
+    |> cast(attrs, [:name, :slug, :description, :home, :source, :checker])
     |> validate_required([:name, :slug, :checker])
     |> unique_constraint(:name)
     |> unique_constraint(:slug)
