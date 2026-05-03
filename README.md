@@ -14,10 +14,9 @@ We then show this with a simple UI.
 Enlightened people can use the nix flake.
 Others need to search how to install:
 
-- Elixir 1.13
-- PostgreSQL 14
-- TimescaleDB extension for PostgresSQL
-- Node
+- Elixir 1.19
+- PostgreSQL 17 with TimescaleDB extension
+- Node.js 24
 
 Then, to start your Phoenix server:
 
