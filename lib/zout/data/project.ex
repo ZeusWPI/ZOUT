@@ -11,6 +11,7 @@ defmodule Zout.Data.Project do
     field :description, :string
     field :home, EctoFields.URL
     field :source, EctoFields.URL
+    field :scope, Ecto.Enum, values: [:public, :bestuur, :internal]
     field :checker, Ecto.Enum, values: [:http_ok, :hydra_api, :unchecked]
     field :params, :map
     field :deleted, :boolean
@@ -44,8 +45,8 @@ defmodule Zout.Data.Project do
       end
 
     project
-    |> cast(attrs, [:name, :slug, :description, :home, :source, :checker])
-    |> validate_required([:name, :slug, :checker])
+    |> cast(attrs, [:name, :slug, :description, :home, :source, :scope, :checker])
+    |> validate_required([:name, :slug, :scope, :checker])
     |> unique_constraint(:name)
     |> unique_constraint(:slug)
     |> handle_checker(attrs)
