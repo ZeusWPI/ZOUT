@@ -99,10 +99,10 @@
       <div class="field">
         <div class="control">
           <div class="is-flex is-justify-content-flex-end">
+            <%= submit @submit, class: "button is-primary" %>
             <%= if can?(@conn, :project_delete, @changeset.data) and !is_nil(@changeset.data.id) do %>
               <%= button "Verwijderen", to: ~p"/projects/#{@changeset.data}", method: :delete, class: "button is-danger" %>
             <% end %>
-            <%= submit @submit, class: "button is-primary" %>
           </div>
         </div>
       </div>
