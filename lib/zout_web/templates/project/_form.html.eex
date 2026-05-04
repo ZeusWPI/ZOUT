@@ -14,11 +14,11 @@
       <%= error_tag(f, :name) %>
     </div>
     <div class="field">
-      <%= label(f, :source, "Repository", class: "label") %>
+      <%= label(f, :description, "Beschrijving", class: "label") %>
       <div class="control">
-        <%= url_input(f, :source, class: input_class(f, :source)) %>
+        <%= text_input(f, :description, class: input_class(f, :description)) %>
       </div>
-      <%= error_tag(f, :source) %>
+      <%= error_tag(f, :description) %>
     </div>
     <div class="field">
       <%= label(f, :home, "Webpagina", class: "label") %>
@@ -26,6 +26,22 @@
         <%= url_input(f, :home, class: input_class(f, :home)) %>
       </div>
       <%= error_tag(f, :home) %>
+    </div>
+    <div class="field">
+      <%= label(f, :source, "Repository", class: "label") %>
+      <div class="control">
+        <%= url_input(f, :source, class: input_class(f, :source)) %>
+      </div>
+      <%= error_tag(f, :source) %>
+    </div>
+    <div class="field">
+      <%= label(f, :scope, "Omvang*", class: "label") %>
+      <div class="control">
+        <div class="<%= input_class(f, :scope, "select") %>">
+          <%= select(f, :scope, [:public, :bestuur, :internal], prompt: "Kies", required: true) %>
+        </div>
+      </div>
+      <%= error_tag(f, :scope) %>
     </div>
   </div>
   <hr>
@@ -37,7 +53,7 @@
       </div>
     </div>
     <div class="field">
-      <%= label(f, :home, "Webpagina", class: "label") %>
+      <%= label(f, :checker, "Mechanisme*", class: "label") %>
       <div class="control">
         <div class="<%= input_class(f, :checker, "select") %>">
           <%= select(f, :checker, [:http_ok, :hydra_api, :unchecked], prompt: "Kies", required: true) %>
@@ -61,7 +77,7 @@
 
     <div class="checker-field" data-for-checker="http_ok" style="display: none">
       <div class="field">
-        <%= label(f, :params_url, "Webpagina", class: "label") %>
+        <%= label(f, :params_url, "Webpagina*", class: "label") %>
         <div class="control">
           <%= url_input(f, :params_url, value: from_map(f, :params_url), class: input_class(f, :params)) %>
         </div>

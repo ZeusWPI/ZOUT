@@ -3,9 +3,10 @@
   <%= if can?(@conn, :project_edit, @project) do %>
     <%= link "Bewerken", to: ~p"/projects/#{@project}/edit", class: "button is-primary is-small" %>
   <% end %>
+
 </h1>
 <div class="subtitle">
-  Hier steken we ooit een TODO...
+  <%= @project.description || "Geen beschrijving" %>
   <ul style="padding-top: 1em">
     <%= unless is_nil(@project.home) do %>
       <li>
@@ -19,6 +20,10 @@
         <%= link "Broncode", to: @project.source %>
       </li>
     <% end %>
+    <li>
+      <span class="icon"><i class="fa fa-crosshairs"></i></span>
+      <%= @project.scope |> Atom.to_string() |> String.capitalize(:default) %>
+    </li>
   </ul>
 
 </div>
