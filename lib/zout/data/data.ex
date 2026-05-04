@@ -73,8 +73,8 @@ defmodule Zout.Data do
   @doc """
   Deletes a Project.
   """
-  def delete_project(%Project{} = _project) do
-    raise "TODO"
+  def delete_project(%Project{} = project) do
+    Repo.delete!(project)
   end
 
   @doc """

@@ -118,4 +118,14 @@ defmodule ZoutWeb.ProjectController do
 
     render(conn, :show, project: project, historical_data: historical_data)
   end
+
+  def delete(conn, %{"id" => id}) do
+    user = Guardian.Plug.current_resource(conn)
+    project = Data.get_project!(id)
+    Bodyguard.permit!(Data.Policy, :project_delete, user, project)
+
+    Data.delete_project(project)
+
+    redirect(conn, to: ~p"/projects")
+  end
 end
