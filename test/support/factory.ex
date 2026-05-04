@@ -9,6 +9,7 @@ defmodule Zout.Factory do
     %Zout.Data.Project{
       name: sequence("name"),
       slug: sequence("slug", fn n -> ZoutWeb.Cldr.Number.to_string!(n, format: :spellout) end),
+      scope: :public,
       checker: :http_ok,
       deleted: false,
       params: %{"url" => "https://zeus.ugent.be"},

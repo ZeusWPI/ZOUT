@@ -43,6 +43,7 @@ defmodule ZoutWeb.ProjectControllerTest do
 
       valid_attrs = %{
         "name" => "hallo",
+        "scope" => "public",
         "checker" => "hydra_api"
       }
 

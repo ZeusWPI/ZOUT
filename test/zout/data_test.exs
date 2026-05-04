@@ -52,6 +52,7 @@ defmodule Zout.DataTest do
     test "with valid data creates a project" do
       valid_attrs = %{
         "name" => "hallo",
+        "scope" => "public",
         "checker" => "hydra_api"
       }
 
