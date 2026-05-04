@@ -2,6 +2,7 @@
   <thead>
   <tr>
     <th>Project</th>
+    <th>Omvang</th>
     <th>Status</th>
     <th>Acties</th>
   </tr>
@@ -10,6 +11,7 @@
   <%= for %{ project: project, ping: ping } <- @projects_and_pings do %>
     <tr>
       <td class="order-item-info"><%= link project.name, to: ~p"/projects/#{project}" %></td>
+      <td><%= project.scope |> Atom.to_string() |> String.capitalize(:default) %></td>
       <td>
         <%= if is_nil(ping) do %>
           <%= render_status(ping) %>
