@@ -112,12 +112,14 @@ defmodule ZoutWeb.ProjectView do
           %{
             id: p.id,
             name: p.name,
-            source: p.source,
+            slug: p.slug,
             home: p.home,
+            source: p.source,
+            scope: p.scope,
+            dependencies: Map.get(dependencies, p.id, []),
             status: json_status(c),
             start: json_start_ping(c),
-            stop: json_stop_ping(c),
-            dependencies: Map.get(dependencies, p.id, [])
+            stop: json_stop_ping(c)
           }
         end),
       lastCheck: NaiveDateTime.to_iso8601(last_check)
