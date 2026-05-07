@@ -103,6 +103,60 @@ defmodule ZoutWeb.ProjectView do
   defp json_stop_ping(%{stop: nil}), do: nil
   defp json_stop_ping(%{stop: s}), do: NaiveDateTime.to_iso8601(s)
 
+  def render_dotx_graph(projects_and_pings) do
+    nodes =
+      projects_and_pings
+      |> Enum.map(fn %{project: project, ping: ping} ->
+        %Dotx.Node{
+          id: [project.slug],
+          attrs: %{
+            "href" => ~p"/projects/#{project.id}",
+            "label" => %Dotx.HTML{
+              html: """
+              <table border="0">
+                <tr><td><b>#{project.name}</b></td></tr>
+                <tr><td><font point-size="8">#{render_status(ping, false)}</font></td></tr>
+              </table>
+              """
+            },
+            "fontcolor" => text_colour(ping),
+            "fillcolor" => status_colour(ping)
+          }
+        }
+      end)
+
+    edges =
+      projects_and_pings
+      |> Enum.map(fn %{project: project} -> project end)
+      # Load the dependencies field
+      |> Enum.map(fn project -> Data.get_project!(project.id) end)
+      |> Enum.flat_map(fn project ->
+        project.dependencies
+        |> Enum.map(fn dependency ->
+          %Dotx.Edge{
+            from: %Dotx.Node{id: [project.slug], attrs: %{}},
+            to: %Dotx.Node{id: [dependency.slug], attrs: %{}},
+            attrs: %{},
+            bidir: false
+          }
+        end)
+      end)
+
+    %Dotx.Graph{
+      strict: false,
+      type: :digraph,
+      id: "ZOUT",
+      attrs: %{},
+      graphs_attrs: %{},
+      nodes_attrs: %{
+        "shape" => "box",
+        "style" => "filled"
+      },
+      edges_attrs: %{},
+      children: Enum.concat(nodes, edges)
+    }
+  end
+
   def can?(conn, action, params \\ nil) do
     user = Guardian.Plug.current_resource(conn)
     Bodyguard.permit?(Zout.Data.Policy, action, user, params)

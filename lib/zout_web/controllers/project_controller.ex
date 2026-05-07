@@ -47,6 +47,11 @@ defmodule ZoutWeb.ProjectController do
             |> Enum.group_by(fn dep -> dep.from_id end, fn dep -> dep.to_id end)
 
           [projects_and_pings: projects_and_pings, dependencies: dependencies]
+
+        "gv" ->
+          projects_and_pings = Data.list_projects_and_status()
+
+          [projects_and_pings: projects_and_pings]
       end
 
     render(conn, :index, params)

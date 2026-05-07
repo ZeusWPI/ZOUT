@@ -7,6 +7,10 @@
 # General application configuration
 import Config
 
+config :mime, :types, %{
+  "text/vnd.graphviz" => ["gv"]
+}
+
 config :zout,
   ecto_repos: [Zout.Repo]
 

@@ -3,7 +3,7 @@ defmodule ZoutWeb.Router do
   import Phoenix.LiveDashboard.Router
 
   pipeline :browser do
-    plug :accepts, ["html", "json"]
+    plug :accepts, ["html", "json", "gv"]
     plug :fetch_session
     plug :fetch_live_flash
     plug :put_layout, html: {ZoutWeb.LayoutView, :app}
