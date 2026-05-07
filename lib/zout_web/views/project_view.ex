@@ -103,29 +103,6 @@ defmodule ZoutWeb.ProjectView do
   defp json_stop_ping(%{stop: nil}), do: nil
   defp json_stop_ping(%{stop: s}), do: NaiveDateTime.to_iso8601(s)
 
-  def render("index.json", %{projects_and_pings: projects, dependencies: dependencies}) do
-    last_check = last_checked(projects)
-
-    %{
-      projects:
-        Enum.map(projects, fn %{project: p, ping: c} ->
-          %{
-            id: p.id,
-            name: p.name,
-            slug: p.slug,
-            home: p.home,
-            source: p.source,
-            scope: p.scope,
-            dependencies: Map.get(dependencies, p.id, []),
-            status: json_status(c),
-            start: json_start_ping(c),
-            stop: json_stop_ping(c)
-          }
-        end),
-      lastCheck: NaiveDateTime.to_iso8601(last_check)
-    }
-  end
-
   def can?(conn, action, params \\ nil) do
     user = Guardian.Plug.current_resource(conn)
     Bodyguard.permit?(Zout.Data.Policy, action, user, params)
@@ -154,5 +131,33 @@ defmodule ZoutWeb.ProjectView do
   """
   def dependency?(%Project{dependencies: deps}, %Project{id: id}) do
     Enum.any?(deps, fn p -> p.id == id end)
+  end
+
+  def render("index.json", %{projects_and_pings: projects, dependencies: dependencies}) do
+    last_check = last_checked(projects)
+
+    %{
+      projects:
+        Enum.map(projects, fn %{project: p, ping: c} ->
+          %{
+            id: p.id,
+            name: p.name,
+            slug: p.slug,
+            home: p.home,
+            source: p.source,
+            scope: p.scope,
+            dependencies: Map.get(dependencies, p.id, []),
+            status: json_status(c),
+            start: json_start_ping(c),
+            stop: json_stop_ping(c)
+          }
+        end),
+      lastCheck: NaiveDateTime.to_iso8601(last_check)
+    }
+  end
+
+  def render("index.gv", %{projects_and_pings: projects_and_pings}) do
+    render_dotx_graph(projects_and_pings)
+    |> Dotx.encode()
   end
 end
