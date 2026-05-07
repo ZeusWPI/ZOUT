@@ -16,10 +16,6 @@ defmodule ZoutWeb.Router do
     plug ZoutWeb.Auth.Pipeline
   end
 
-  pipeline :api do
-    plug :accepts, ["html", "json"]
-  end
-
   pipeline :admin do
     plug :admin_only
   end
@@ -42,11 +38,6 @@ defmodule ZoutWeb.Router do
       post "/logout", AuthController, :logout
     end
   end
-
-  # Other scopes may use custom stacks.
-  # scope "/api", ZoutWeb do
-  #   pipe_through :api
-  # end
 
   defp admin_only(conn, _opts) do
     alias Zout.Data
