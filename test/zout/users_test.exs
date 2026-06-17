@@ -26,7 +26,7 @@ defmodule Zout.AccountsTest do
         info: %Ueberauth.Auth.Info{
           nickname: "new-user"
         },
-        extra: %Ueberauth.Auth.Extra{raw_info: %{admin: true}}
+        extra: %Ueberauth.Auth.Extra{raw_info: %{admin: true, roles: []}}
       }
 
       user_count_before = Repo.aggregate(User, :count, :id)
@@ -39,6 +39,23 @@ defmodule Zout.AccountsTest do
       assert_in_delta user_count_after, user_count_before, 1
     end
 
+    test "creates admin for zout admin role" do
+      new_user = %Ueberauth.Auth{
+        uid: 694,
+        info: %Ueberauth.Auth.Info{
+          nickname: "new-user-2"
+        },
+        extra: %Ueberauth.Auth.Extra{raw_info: %{admin: false, roles: ["zout_admin"]}}
+      }
+
+      user_count_before = Repo.aggregate(User, :count, :id)
+      inserted_user = Accounts.update_or_create!(new_user)
+      user_count_after = Repo.aggregate(User, :count, :id)
+
+      assert inserted_user.admin
+      assert_in_delta user_count_after, user_count_before, 1
+    end
+
     test "updates existing user" do
       existing_user = insert(:user, nickname: "before", admin: false)
 
@@ -47,7 +64,7 @@ defmodule Zout.AccountsTest do
         info: %Ueberauth.Auth.Info{
           nickname: "after"
         },
-        extra: %Ueberauth.Auth.Extra{raw_info: %{admin: true}}
+        extra: %Ueberauth.Auth.Extra{raw_info: %{admin: true, roles: []}}
       }
 
       user_count_before = Repo.aggregate(User, :count, :id)

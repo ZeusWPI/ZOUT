@@ -78,7 +78,8 @@ defmodule ZoutWeb.Auth.UeberauthStrategy do
       raw_info: %{
         token: conn.private.zeus_token,
         user: conn.private.zeus_user,
-        admin: conn.private.zeus_user["admin"]
+        admin: conn.private.zeus_user["admin"],
+        roles: conn.private.zeus_user["roles"]
       }
     }
   end
@@ -99,7 +100,7 @@ defmodule ZoutWeb.Auth.UeberauthStrategy do
         set_errors!(conn, [error("OAuth2", reason)])
 
       {:error, _} ->
-        set_errors!(conn, [error("OAuth2", "uknown error")])
+        set_errors!(conn, [error("OAuth2", "unknown error")])
     end
   end
 end

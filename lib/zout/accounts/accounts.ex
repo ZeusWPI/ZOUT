@@ -9,15 +9,22 @@ defmodule Zout.Accounts do
   def update_or_create!(%Ueberauth.Auth{
         uid: id,
         info: info,
-        extra: %Ueberauth.Auth.Extra{raw_info: %{admin: admin}}
+        extra: %Ueberauth.Auth.Extra{raw_info: %{admin: zauth_admin, roles: roles}}
       }) do
+    user_roles = MapSet.new(roles)
+
+    has_admin_role =
+      MapSet.intersection(admin_roles(), user_roles) |> Enum.empty?() |> Kernel.not()
+
+    is_zout_admin = zauth_admin || has_admin_role
+
     case Repo.get(User, id) do
       nil -> %User{id: id}
       user -> user
     end
     |> User.changeset(%{
       nickname: info.nickname,
-      admin: admin
+      admin: is_zout_admin
     })
     |> Repo.insert_or_update!()
   end
@@ -26,4 +33,6 @@ defmodule Zout.Accounts do
   Get the user with the given ID.
   """
   def get_user(id), do: Repo.get(User, id)
+
+  defp admin_roles(), do: MapSet.new(["bestuur", "zout_admin"])
 end

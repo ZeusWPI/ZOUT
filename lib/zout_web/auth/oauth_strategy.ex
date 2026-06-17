@@ -52,7 +52,10 @@ defmodule ZoutWeb.Auth.OAuthStrategy do
   end
 
   def authorize_url!() do
-    OAuth2.Client.authorize_url!(client())
+    OAuth2.Client.authorize_url!(
+      client(),
+      scope: "roles"
+    )
   end
 
   def get_token!(params \\ []) do
